@@ -32,9 +32,9 @@ GEM
       activesupport
       builder
     arel (3.0.2)
-    bson (1.6.2)
-    bson_ext (1.6.2)
-      bson (~> 1.6.2)
+    bson (1.6.4)
+    bson_ext (1.6.4)
+      bson (~> 1.6.4)
     builder (3.0.0)
     chunky_png (1.2.5)
     compass (0.12.1)
