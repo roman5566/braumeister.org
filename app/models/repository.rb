@@ -263,6 +263,7 @@ class Repository
         $homebrew_path = base_repo.path
         require 'sandbox_backtick'
 
+	ENV['HOMEBREW_NO_COMPAT'] = 'TRUE'
         load 'global.rb'
         if Object.const_defined? :Formula
           class << Formula
