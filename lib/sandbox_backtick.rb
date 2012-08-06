@@ -11,9 +11,9 @@ module Kernel
     if command == 'which brew'
       File.join $homebrew_path, 'bin', 'brew'
     elsif command == '/usr/bin/sw_vers -productVersion'
-      '10.7.2'
+      '10.8'
     elsif command == 'xcodebuild -version 2>&1'
-      "Xcode 4.2\nBuild version 4D199"
+      "Xcode 4.4\nBuild version 4F250"
     else
       orig_backtick command
     end
