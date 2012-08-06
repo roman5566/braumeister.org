@@ -207,9 +207,9 @@ describe Repository do
     end
 
     it 'reraises errors caused by the subprocess' do
-      Formula.expects(:factory).with('git').raises RuntimeError.new('subprocess failed')
+      Formula.expects(:factory).with('git').raises StandardError.new('subprocess failed')
 
-      ->() { repo.send :formulae_info, %w{git} }.should raise_error(RuntimeError, 'subprocess failed')
+      ->() { repo.send :formulae_info, %w{git} }.should raise_error(StandardError, 'subprocess failed')
     end
 
   end

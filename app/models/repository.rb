@@ -283,8 +283,8 @@ class Repository
               keg_only: formula.keg_only? != false,
               version: formula.version
             }
-          rescue NoMethodError, SyntaxError
-            Rails.logger.warn "Formula '#{name}' could not be imported because of a syntax error."
+          rescue NoMethodError, RuntimeError, SyntaxError
+            Rails.logger.warn "Formula '#{name}' could not be imported because of an error."
             if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
               Airbrake.notify $!
             end
