@@ -256,22 +256,17 @@ class Repository
       begin
         pipe_read.close
 
-        $LOAD_PATH.unshift File.join(base_repo.path, 'Library', 'Homebrew')
-
-        Object.send(:remove_const, :Formula) if Object.const_defined? :Formula
-
-        $homebrew_path = base_repo.path
         require 'sandbox_backtick'
         require 'sandbox_io_popen'
 
-        ENV['HOMEBREW_NO_COMPAT'] = 'TRUE'
-        load 'global.rb'
-        if Object.const_defined? :Formula
-          class << Formula
-            remove_method(:method_added) if method_defined? :method_added
-          end
-        end
-        load 'formula.rb'
+        $homebrew_path = base_repo.path
+        $LOAD_PATH.unshift $homebrew_path
+        $LOAD_PATH.unshift File.join($homebrew_path, 'Library', 'Homebrew')
+
+        Object.send(:remove_const, :Formula) if Object.const_defined? :Formula
+
+        require 'Library/Homebrew/global'
+        require 'Library/Homebrew/formula'
 
         formulae_info = {}
         formulae.each do |name|
