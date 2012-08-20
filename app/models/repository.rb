@@ -277,7 +277,7 @@ class Repository
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,
               keg_only: formula.keg_only? != false,
-              version: formula.version
+              version: formula.version.to_s
             }
           rescue NoMethodError, RuntimeError, SyntaxError
             Rails.logger.warn "Formula '#{name}' could not be imported because of an error."
