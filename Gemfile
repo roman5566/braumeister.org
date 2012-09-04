@@ -2,7 +2,7 @@ ruby '1.9.3'
 source :rubygems
 
 gem 'bson_ext', '~> 1.6.0', platforms: :ruby
-gem 'dalli', '~> 2.1.0'
+gem 'dalli', '~> 2.2.0'
 gem 'jquery-rails', '~> 2.1.1'
 gem 'kaminari', '~> 0.13.0'
 gem 'mongoid', '~> 2.4.2'
