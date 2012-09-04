@@ -40,6 +40,10 @@
   end
   pagination = paginate @formulae, params: page_params %>
 
+  <% content_for :kaminari do %>
+    <%= rel_next_prev_link_tags @formulae %>
+  <% end %>
+
   <%= pagination %>
 
   <div class="listing">
