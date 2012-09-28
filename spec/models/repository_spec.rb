@@ -168,23 +168,26 @@ describe Repository do
       io.expects(:close).times(4).with { io.rewind }
       IO.expects(:pipe).returns [io, io]
 
+      repo.expects(:require).with 'sandbox_backtick'
+      repo.expects(:require).with 'sandbox_io_popen'
       Object.expects(:remove_const).with :Formula
-      repo.expects(:load).with 'global.rb'
-      repo.expects(:load).with 'formula.rb'
+      repo.expects(:require).with 'Library/Homebrew/global'
+      repo.expects(:require).with 'Library/Homebrew/formula'
     end
 
     it 'clones or updates the main repository for non-full repositories' do
       main_repo = mock
       Repository.expects(:main).twice.returns main_repo
       main_repo.expects :clone_or_pull
-      main_repo.expects(:path).twice.returns 'path'
+      main_repo.expects(:path).returns 'path'
       repo.expects(:full?).twice.returns false
 
       repo.send :formulae_info, []
     end
 
     it 'sets some global information on the repo path' do
-      repo.expects(:path).twice.returns 'path'
+      repo.expects(:path).returns 'path'
+      $LOAD_PATH.expects(:unshift).with File.join('path')
       $LOAD_PATH.expects(:unshift).with File.join('path', 'Library', 'Homebrew')
 
       repo.send :formulae_info, []
