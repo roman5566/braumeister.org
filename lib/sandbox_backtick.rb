@@ -10,6 +10,8 @@ module Kernel
   def `(command)
     if command == 'which brew'
       File.join $homebrew_path, 'bin', 'brew'
+    elsif command == '/usr/bin/mdfind "kMDItemCFBundleIdentifier == \'com.apple.dt.Xcode\'"'
+      '/Applications/Xcode.app'
     elsif command == '/usr/bin/sw_vers -productVersion'
       '10.8'
     elsif command == 'xcodebuild -version 2>&1'
