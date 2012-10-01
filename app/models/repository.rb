@@ -107,7 +107,6 @@ class Repository
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
     log = git log_cmd
 
-    revisions = []
     commits = log.split(/\n\n/)
     commits.each do |commit|
       commit = commit.lines.to_a
@@ -136,9 +135,8 @@ class Repository
         end
       end
       rev.save!
-      revisions << rev
+      self.revisions << rev
     end
-    self.revisions += revisions
     save!
   end
 
@@ -175,6 +173,7 @@ class Repository
       updated_formulae << fpath.match(formula_regex)[1] unless type == 'D'
     end
     formulae_info = formulae_info updated_formulae
+    updated_formulae = nil
 
     added = modified = removed = 0
     formulae.each do |type, fpath|
@@ -195,7 +194,7 @@ class Repository
           Rails.logger.debug "Updated formula #{formula.name}."
         end
         formula.deps = []
-        formula_info = formulae_info[formula.name]
+        formula_info = formulae_info.delete formula.name
         next if formula_info.nil?
         formula_info[:deps].each do |dep|
           dep_formula = self.formulae.where(name: dep).first
