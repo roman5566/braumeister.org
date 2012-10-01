@@ -284,7 +284,7 @@ class Repository
               Airbrake.notify $!
             end
           rescue TypeError
-            const = $!.message.match(/^(.*?) is not a class/)[1].to_sym
+            const = $!.message.match(/^undefined method `new' for (.*?):Module/)[1].to_sym
             Object.send :remove_const, const
             redo
           end
