@@ -3,6 +3,11 @@ language: ruby
 before_script:
   - mongo braumeister-test --eval 'db.addUser("braumeister", "braumeister");'
 
+branches:
+  except:
+    - production
+    - staging
+
 rvm:
  - 1.9.2
  - 1.9.3
