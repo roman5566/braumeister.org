@@ -6,7 +6,7 @@ gem 'dalli', '~> 2.2.0'
 gem 'jquery-rails', '~> 2.1.1'
 gem 'kaminari', '~> 0.14.0'
 gem 'mongoid', '~> 2.5.0'
-gem 'newrelic_rpm', '~> 3.4.0'
+gem 'newrelic_rpm', '~> 3.5.0'
 gem 'rails', '3.2.8'
 gem 'text', '~> 1.2.0'
 gem 'unicorn', '~> 4.3.0', platforms: :ruby
