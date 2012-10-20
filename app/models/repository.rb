@@ -283,7 +283,7 @@ class Repository
             if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
               Airbrake.notify $!
             end
-          rescue TypeError
+          rescue NoMethodError
             const = $!.message.match(/^undefined method `new' for (.*?):Module/)[1].to_sym
             Object.send :remove_const, const
             redo
