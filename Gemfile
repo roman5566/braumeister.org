@@ -9,7 +9,7 @@ gem 'mongoid', '~> 2.5.0'
 gem 'newrelic_rpm', '~> 3.5.0'
 gem 'rails', '3.2.8'
 gem 'text', '~> 1.2.0'
-gem 'unicorn', '~> 4.3.0', platforms: :ruby
+gem 'unicorn', '~> 4.4.0', platforms: :ruby
 
 group :assets do
   gem 'compass-rails', '~> 1.0.0'
