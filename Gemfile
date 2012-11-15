@@ -30,5 +30,5 @@ group :production do
 end
 
 group :test do
-  gem 'mocha', '~> 0.12.1', require: 'mocha_standalone'
+  gem 'mocha', '~> 0.13.0', require: 'mocha/api'
 end
