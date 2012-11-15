@@ -22,7 +22,7 @@ group 'development' do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.11.0'
+  gem 'rspec-rails', '~> 2.12.0'
 end
 
 group :production do
