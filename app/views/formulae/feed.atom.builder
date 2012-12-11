@@ -5,7 +5,9 @@
 #
 # Copyright (c) 2012, Sebastian Staudt
 
-atom_feed id: "tag:braumeister.org:#{@repository.name}", schema_date: 2012 do |feed|
+atom_feed :id => "tag:braumeister.org,2012:#{@repository.name}",
+          :schema_data => 2012,
+          'xmlns:opensearch' => 'http://a9.com/-/spec/opensearch/1.1/' do |feed|
   feed.title "braumeister.org – Recent changes in #{@repository.name}"
   feed.updated @repository.updated_at
 
@@ -14,7 +16,7 @@ atom_feed id: "tag:braumeister.org:#{@repository.name}", schema_date: 2012 do |f
 
   add_entry = ->(status, formula, revision) do
     entry_options = {
-      id: "tag:braumeister.org:#{@repository.name}/#{formula.name}",
+      id: "tag:braumeister.org,2012:#{@repository.name}/#{formula.name}-#{revision.sha}",
       published: revision.date,
       updated:   revision.date
     }
