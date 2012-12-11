@@ -18,6 +18,7 @@ group :assets do
 end
 
 group 'development' do
+  gem 'foreman', '~> 0.60'
   gem 'ruby-prof', '~> 0.11.2', platforms: :ruby
 end
 
