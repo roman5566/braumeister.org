@@ -9,7 +9,6 @@ branches:
     - staging
 
 rvm:
- - 1.9.2
  - 1.9.3
  - jruby-19mode
  - ruby-head
@@ -18,5 +17,10 @@ matrix:
   allow_failures:
     - rvm: jruby-19mode
     - rvm: ruby-head
+  include:
+    - rvm: 1.9.3
+    - rvm: jruby-19mode
+    - rvm: ruby-head
+      gemfile: Gemfile.ruby-head
 
 services: mongodb
