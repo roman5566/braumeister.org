@@ -1,5 +1,5 @@
 ruby '1.9.3'
-source :rubygems
+source 'https://rubygems.org'
 
 gem 'bson_ext', '~> 1.7.0', platforms: :ruby
 gem 'dalli', '~> 2.5.0'
