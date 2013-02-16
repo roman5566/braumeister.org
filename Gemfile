@@ -5,7 +5,7 @@ gem 'bson_ext', '~> 1.7.0', platforms: :ruby
 gem 'dalli', '~> 2.5.0'
 gem 'jquery-rails', '~> 2.1.1'
 gem 'kaminari', '~> 0.14.0'
-gem 'mongoid', '~> 2.5.0'
+gem 'mongoid', '~> 2.6.0'
 gem 'newrelic_rpm', '~> 3.5.0'
 gem 'rails', '3.2.12'
 gem 'text', '~> 1.2.0'
