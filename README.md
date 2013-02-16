@@ -1,6 +1,8 @@
 braumeister.org
 ===============
 
+[![Build Status](https://secure.travis-ci.org/koraktor/braumeister.org.png)](http://travis-ci.org/koraktor/braumeister.org) [![Dependency Status](https://gemnasium.com/koraktor/braumeister.org.png)](https://gemnasium.com/koraktor/braumeister.org) [![Code Climate](https://codeclimate.com/github/koraktor/braumeister.org.png)](https://codeclimate.com/github/koraktor/braumeister.org)
+
 braumeister.org is a Rails application that gathers package information from
 Homebrew, the MacOS X package manager.
 
@@ -55,7 +57,7 @@ development:
 ## About the name
 
 "Braumeister" – [ˈbʁaʊmʌɪstəʀ] – is the German word for "master brewer" or
-"brewmaster", then person in charge of beer production.
+"brewmaster", the person in charge of beer production.
 
 ## License
 
@@ -73,14 +75,14 @@ LICENSE file.
  * [GitHub project page][1]
  * [GitHub issue tracker][2]
  * [Homebrew][3]
- * [Continuous Integration at Travis CI][5]: [![Build Status](https://secure.travis-ci.org/koraktor/braumeister.org.png?branch=master)][5]
- * [Dependency status at Gemnasium][4]: [![Dependency Status](https://gemnasium.com/koraktor/braumeister.org.png?travis)][4]
- 
- Follow braumeister.org on Twitter
- [@braumeister_org](http://twitter.com/braumeister_org).
+ * [Continuous Integration at Travis CI][5]
+ * [Dependency status at Gemnasium][4]
+
+Follow braumeister.org on Twitter
+[@braumeister_org](http://twitter.com/braumeister_org).
 
  [1]: https://github.com/koraktor/braumeister.org
  [2]: https://github.com/koraktor/braumeister.org/issues
  [3]: http://mxcl.github.com/homebrew
  [4]: https://gemnasium.com/koraktor/braumeister.org
- [5]: http://travis-ci.org/koraktor/braumeister.org
+ [5]: https://travis-ci.org/koraktor/braumeister.org
