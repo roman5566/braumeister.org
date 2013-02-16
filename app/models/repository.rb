@@ -279,14 +279,19 @@ class Repository
               version: formula.version.to_s
             }
           rescue NoMethodError, RuntimeError, SyntaxError
-            Rails.logger.warn "Formula '#{name}' could not be imported because of an error."
-            if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
-              Airbrake.notify $!
+            if $!.is_a? NoMethodError
+              $!.message.match /^undefined method `new' for (.*?):Module/
+              unless $~.nil?
+                Object.send :remove_const, $~[1].to_sym
+                redo
+              end
             end
-          rescue NoMethodError
-            const = $!.message.match(/^undefined method `new' for (.*?):Module/)[1].to_sym
-            Object.send :remove_const, const
-            redo
+
+            error_msg = "Formula '#{name}' could not be imported because of an error."
+            Rails.logger.warn error_msg
+            if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
+              Airbrake.notify $!, { error_message: error_msg }
+            end
           end
         end
 
