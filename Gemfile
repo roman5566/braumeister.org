@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 
 gem 'bson_ext', '~> 1.7.0', platforms: :ruby
 gem 'dalli', '~> 2.6.2'
-gem 'jquery-rails', '~> 2.1.1'
+gem 'jquery-rails', '~> 2.2.1'
 gem 'kaminari', '~> 0.14.0'
 gem 'mongoid', '~> 2.6.0'
 gem 'newrelic_rpm', '~> 3.5.0'
