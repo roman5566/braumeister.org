@@ -10,6 +10,7 @@ branches:
 
 rvm:
  - 1.9.3
+ - 2.0.0
  - jruby-19mode
  - ruby-head
 
@@ -17,12 +18,5 @@ matrix:
   allow_failures:
     - rvm: jruby-19mode
     - rvm: ruby-head
-  exclude:
-    - rvm:     1.9.3
-      gemfile: Gemfile.ruby-head
-    - rvm:     jruby-19mode
-      gemfile: Gemfile.ruby-head
-    - rvm:     ruby-head
-      gemfile: Gemfile
 
 services: mongodb
