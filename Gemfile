@@ -23,6 +23,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'coveralls', require: false
   gem 'rspec-rails', '~> 2.12.0'
 end
 
