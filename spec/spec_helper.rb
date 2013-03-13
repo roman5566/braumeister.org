@@ -1,15 +1,15 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
+
+require 'coveralls'
+Coveralls.wear! 'rails'
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
-
-require 'coveralls'
-Coveralls.wear! 'rails'
 
 RSpec.configure do |config|
   config.formatter = :documentation
