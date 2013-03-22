@@ -26,6 +26,8 @@ class Repository
   end
 
   def clone_or_pull
+    Repository.main.clone_or_pull unless full?
+
     last_sha = sha
 
     if File.exists? path
@@ -255,7 +257,6 @@ class Repository
 
   def formulae_info(formulae)
     base_repo = full? ? self : Repository.main
-    Repository.main.clone_or_pull unless full?
 
     pipe_read, pipe_write = IO.pipe
 
