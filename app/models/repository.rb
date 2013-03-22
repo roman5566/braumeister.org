@@ -261,6 +261,7 @@ class Repository
         $homebrew_path = base_repo.path
         $LOAD_PATH.unshift $homebrew_path
         $LOAD_PATH.unshift File.join($homebrew_path, 'Library', 'Homebrew')
+        ENV['HOMEBREW_BREW_FILE'] = File.join $homebrew_path, 'bin', 'brew'
 
         Object.send(:remove_const, :Formula) if Object.const_defined? :Formula
 
