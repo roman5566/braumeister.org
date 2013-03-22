@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby '2.0.0'
 
 gem 'bson_ext', '~> 1.7.0', platforms: :ruby
 gem 'dalli', '~> 2.6.2'
