@@ -276,6 +276,8 @@ class Repository
         require 'Library/Homebrew/global'
         require 'Library/Homebrew/formula'
 
+        require 'sandbox_macos'
+
         formulae_info = {}
         formulae.each do |name|
           begin
