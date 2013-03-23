@@ -86,6 +86,21 @@ describe Repository do
       repo.date.should eq(Time.at 1325844635)
     end
 
+    it 'clones or updates the main repository for non-full repositories' do
+      main_repo = mock
+      Repository.expects(:main).returns main_repo
+      main_repo.expects :clone_or_pull
+
+      repo.expects(:full?).returns false
+      File.expects(:exists?).with(repo.path).returns false
+      repo.expects(:git).with "clone --quiet #{repo.url} #{repo.path}"
+      repo.expects(:git).with('log -1 --format=format:"%H %ct" HEAD').
+        returns 'deadbeef 1325844635'
+      repo.expects(:sha).twice.returns 'deadbeef'
+
+      repo.clone_or_pull
+    end
+
     context 'updates an already known repository' do
 
       before do
@@ -175,16 +190,6 @@ describe Repository do
       Object.expects(:remove_const).with :Formula
       repo.expects(:require).with 'Library/Homebrew/global'
       repo.expects(:require).with 'Library/Homebrew/formula'
-    end
-
-    it 'clones or updates the main repository for non-full repositories' do
-      main_repo = mock
-      Repository.expects(:main).twice.returns main_repo
-      main_repo.expects :clone_or_pull
-      main_repo.expects(:path).returns 'path'
-      repo.expects(:full?).twice.returns false
-
-      repo.send :formulae_info, []
     end
 
     it 'sets some global information on the repo path' do
