@@ -1,16 +1,16 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 class Revision
 
   include Mongoid::Document
 
+  field :_id, type: String, default: ->{ sha }
   field :date, type: Time
   field :subject, type: String
   field :sha, type: String
-  key :sha
 
   belongs_to :repository
   belongs_to :author

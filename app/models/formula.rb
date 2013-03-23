@@ -1,13 +1,14 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 class Formula
 
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
 
+  field :_id, type: String
   field :aliases, type: Array
   field :date, type: Time
   field :keg_only, type: Boolean, default: false
@@ -16,7 +17,8 @@ class Formula
   field :homepage, type: String
   field :path, type: String
   field :version, type: String
-  key :repository_id, :name
+
+  after_build :set_id
 
   alias_method :to_param, :name
 
@@ -35,6 +37,12 @@ class Formula
 
   def raw_url
     "https://raw.github.com/#{repository.name}/HEAD/#{path}"
+  end
+
+  private
+
+  def set_id
+    self._id = "#{repository.name}/#{name}"
   end
 
 end

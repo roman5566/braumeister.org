@@ -1,8 +1,22 @@
 development:
-  uri: mongodb://braumeister:braumeister@localhost:27017/braumeister
+  sessions:
+    default:
+      hosts:
+        - localhost:27017
+      database: braumeister
+      username: braumeister
+      password: braumeister
 
 production:
-  uri: <%= ENV['MONGOLAB_URI'] %>
+  sessions:
+    default:
+      uri: <%= ENV['MONGOLAB_URI'] %>
 
 test:
-  uri: mongodb://braumeister:braumeister@localhost:27017/braumeister-test
+  sessions:
+    default:
+      hosts:
+        - localhost:27017
+      database: braumeister-test
+      username: braumeister
+      password: braumeister

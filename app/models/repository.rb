@@ -11,18 +11,18 @@ class Repository
   ALIAS_REGEX = /^(?:Library\/)?Aliases\/(.+?)$/
   MAIN        = 'mxcl/homebrew'
 
+  field :_id, type: String, default: ->{ name }
   field :date, type: Time
   field :full, type: Boolean, default: false
   field :name, type: String
   field :sha, type: String
-  key :name
 
   has_many :authors
   has_many :formulae, dependent: :destroy
   has_many :revisions, dependent: :destroy
 
   def self.main
-    find MAIN.identify
+    find MAIN
   end
 
   def clone_or_pull

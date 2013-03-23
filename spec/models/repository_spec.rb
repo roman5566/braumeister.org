@@ -12,7 +12,7 @@ describe Repository do
   describe '.main' do
     it "returns the repository object for #{Repository::MAIN}" do
       repo = mock
-      Repository.expects(:find).with(Repository::MAIN.identify).returns repo
+      Repository.expects(:find).with(Repository::MAIN).returns repo
 
       Repository.main.should eq(repo)
     end

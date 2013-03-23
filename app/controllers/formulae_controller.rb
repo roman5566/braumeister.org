@@ -73,7 +73,7 @@ class FormulaeController < ApplicationController
         end
         return
       end
-      raise Mongoid::Errors::DocumentNotFound.new(Formula, params[:id])
+      raise Mongoid::Errors::DocumentNotFound.new(Formula, [], params[:id])
     end
     @title = @formula.name.dup
     @title << " – #{@repository.name}" unless @repository.main?
@@ -92,7 +92,7 @@ class FormulaeController < ApplicationController
     end
 
     params[:repository_id] ||= 'mxcl/homebrew'
-    @repository = Repository.find params[:repository_id].identify
+    @repository = Repository.find params[:repository_id]
   end
 
 end
