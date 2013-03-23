@@ -87,7 +87,6 @@ class Repository
     unless full?
       formulae_path = File.join Repository.main.path, 'Library', 'Formula'
       Dir.glob File.join(path, '*.rb') do |formula|
-        puts "ln -s #{formula} #{formulae_path} 2>/dev/null"
         `ln -s #{formula} #{formulae_path} 2>/dev/null`
       end
     end
