@@ -288,11 +288,14 @@ class Repository
               keg_only: formula.keg_only? != false,
               version: formula.version.to_s
             }
-          rescue NoMethodError, RuntimeError, SyntaxError
-            if $!.is_a? NoMethodError
-              $!.message.match /^undefined method `new' for (.*?):Module/
-              unless $~.nil?
-                Object.send :remove_const, $~[1].to_sym
+          rescue FormulaUnavailableError, NoMethodError, RuntimeError,
+                 SyntaxError
+            name = File.basename name, '.rb'
+
+            if $!.is_a? FormulaUnavailableError
+              formula_class = Formula.class_s(name).to_sym
+              if Object.const_defined? formula_class
+                Object.send :remove_const, formula_class
                 redo
               end
             end

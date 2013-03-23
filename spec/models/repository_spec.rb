@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 require 'spec_helper'
 
@@ -153,9 +153,11 @@ describe Repository do
     end
   end
 
-  describe '#formula_info' do
+  describe '#formulae_info' do
 
     before do
+      class FormulaUnavailableError; end
+
       def repo.fork
         yield
         1234
