@@ -16,6 +16,8 @@ module Kernel
       '10.8'
     elsif command == 'xcodebuild -version 2>&1'
       "Xcode 4.4\nBuild version 4F250"
+    elsif command == 'php -v'
+      "5.4"
     else
       orig_backtick command
     end
