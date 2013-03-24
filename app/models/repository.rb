@@ -61,9 +61,8 @@ class Repository
 
     log_cmd = "log --format=format:'%H%x00%ct%x00%aE%x00%aN%x00%s' --name-status --no-merges --reverse #{ref}"
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
-    log = git log_cmd
 
-    commits = log.split(/\n\n/)
+    commits = git(log_cmd).split(/\n\n/)
     commit_progress = 0
     commit_count = commits.size
     while !commits.empty?
