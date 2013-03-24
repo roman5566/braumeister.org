@@ -272,6 +272,12 @@ class Repository
         formulae_info = {}
         formulae.each do |name|
           begin
+            formula_name = File.basename name, '.rb'
+            formula_class = Formula.class_s(formula_name).to_sym
+            if Object.const_defined? formula_class
+              Object.send :remove_const, formula_class
+            end
+
             name = File.join path, name unless full? || name.start_with?(path)
             formula = Formula.factory name
             formulae_info[formula.name] = {
@@ -282,16 +288,6 @@ class Repository
             }
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
                  SyntaxError
-            name = File.basename name, '.rb'
-
-            if $!.is_a? FormulaUnavailableError
-              formula_class = Formula.class_s(name).to_sym
-              if Object.const_defined? formula_class
-                Object.send :remove_const, formula_class
-                redo
-              end
-            end
-
             error_msg = "Formula '#{name}' could not be imported because of an error."
             Rails.logger.warn error_msg
             if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?

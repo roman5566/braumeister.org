@@ -175,7 +175,9 @@ describe Repository do
       git = mock deps: [], homepage: 'http://git-scm.com', keg_only?: false, name: 'git', version: '1.7.9'
       memcached = mock deps: %w(libevent), homepage: 'http://memcached.org/', keg_only?: false, name: 'memcached', version: '1.4.11'
 
+      Formula.expects(:class_s).with('git').returns :Git
       Formula.expects(:factory).with('git').returns git
+      Formula.expects(:class_s).with('memcached').returns :Memcached
       Formula.expects(:factory).with('memcached').returns memcached
 
       formulae_info = repo.send :formulae_info, %w{git memcached}
@@ -186,7 +188,7 @@ describe Repository do
     end
 
     it 'reraises errors caused by the subprocess' do
-      Formula.expects(:factory).with('git').raises StandardError.new('subprocess failed')
+      Formula.expects(:class_s).with('git').raises StandardError.new('subprocess failed')
 
       ->() { repo.send :formulae_info, %w{git} }.should raise_error(StandardError, 'subprocess failed')
     end
