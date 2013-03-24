@@ -57,43 +57,52 @@ class Repository
   def generate_history(last_sha = nil)
     ref = last_sha.nil? ? 'HEAD' : "#{last_sha}..HEAD"
 
-    Rails.logger.info "Regenerating history for #{ref}"
+    Rails.logger.info "Regenerating history for #{ref}..."
 
     log_cmd = "log --format=format:'%H%x00%ct%x00%aE%x00%aN%x00%s' --name-status --no-merges --reverse #{ref}"
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
     log = git log_cmd
 
     commits = log.split(/\n\n/)
-    commits.each do |commit|
-      commit = commit.lines.to_a
-      info, formulae = commit.shift.strip.split("\x00"), commit
-      rev = self.revisions.build sha: info[0]
-      rev.author = self.authors.find_or_initialize_by email: info[2]
-      rev.author.name = info[3]
-      rev.author.save!
-      rev.date = info[1].to_i
-      rev.subject = info[4]
-      formulae.each do |formula|
-        status, name = formula.split
-        next unless full? || name.match(formula_regex)
-        name = File.basename name.match(formula_regex)[1], '.rb'
-        formula = self.formulae.where(name: name).first
-        next if formula.nil?
-        formula.revisions << rev
-        formula.date = rev.date if formula.date.nil? || rev.date > formula.date
-        formula.save!
-        if status == 'A'
-          rev.added_formulae << formula
-        elsif status == 'M'
-          rev.updated_formulae << formula
-        elsif status == 'D'
-          rev.removed_formulae << formula
+    commit_progress = 0
+    commit_count = commits.size
+    while !commits.empty?
+      commit_batch = commits.shift 100
+      commit_batch.each do |commit|
+        commit = commit.lines.to_a
+        info, formulae = commit.shift.strip.split("\x00"), commit
+        rev = self.revisions.build sha: info[0]
+        rev.author = self.authors.find_or_initialize_by email: info[2]
+        rev.author.name = info[3]
+        rev.author.save!
+        rev.date = info[1].to_i
+        rev.subject = info[4]
+        formulae.each do |formula|
+          status, name = formula.split
+          next unless full? || name.match(formula_regex)
+          name = File.basename name.match(formula_regex)[1], '.rb'
+          formula = self.formulae.where(name: name).first
+          next if formula.nil?
+          formula.revisions << rev
+          formula.date = rev.date if formula.date.nil? || rev.date > formula.date
+          formula.save!
+          if status == 'A'
+            rev.added_formulae << formula
+          elsif status == 'M'
+            rev.updated_formulae << formula
+          elsif status == 'D'
+            rev.removed_formulae << formula
+          end
         end
+        rev.save!
+        self.revisions << rev
       end
-      rev.save!
-      self.revisions << rev
+
+      save!
+
+      commit_progress += commit_batch.size
+      Rails.logger.debug "Analyzed #{commit_progress} of #{commit_count} revisions."
     end
-    save!
   end
 
   def git(command)
