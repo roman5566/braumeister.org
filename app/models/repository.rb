@@ -285,6 +285,7 @@ class Repository
             formula_class = Formula.class_s(formula_name).to_sym
             if Object.const_defined? formula_class
               Object.send :remove_const, formula_class
+              $LOADED_FEATURES.reject! { |p| p =~ /\/#{formula_name}.rb/ }
             end
 
             name = File.join path, name unless full? || name.start_with?(path)
