@@ -47,13 +47,15 @@ namespace :braumeister do
   desc 'Completely regenerates one or all repositories and their formulae'
   task_with_tracing :regenerate, [:repo] => :select_repos do
     @repos.each do |repo|
+      FileUtils.rm_rf repo.path
       repo.authors.clear
       repo.formulae.clear
       repo.revisions.clear
       repo.sha = nil
-      FileUtils.rm_rf repo.path
-      repo.refresh
+      repo.save
     end
+
+    @repos.each &:refresh
   end
 
   desc 'Regenerates the history of one or all repositories'
