@@ -28,74 +28,21 @@ class Repository
   def clone_or_pull
     Repository.main.clone_or_pull unless full?
 
-    last_sha = sha
-
     if File.exists? path
       Rails.logger.info "Pulling changes from #{name} into #{path}"
       git 'fetch --force --quiet origin master'
-
-      log = git('log -1 --format=format:"%H %ct" FETCH_HEAD').split
-      self.sha = log[0]
-
-      if last_sha == sha
-        Rails.logger.info "Repository #{name} is already up-to-date"
-        return [], [], last_sha
+      diff = git 'diff --shortstat HEAD FETCH_HEAD'
+      unless diff.empty?
+        git "--work-tree #{path} reset --hard --quiet FETCH_HEAD"
       end
-
-      git "--work-tree #{path} reset --hard --quiet FETCH_HEAD"
     else
       Rails.logger.info "Cloning #{name} into #{path}"
       git "clone --quiet #{url} #{path}"
-
-      log = git('log -1 --format=format:"%H %ct" HEAD').split
-      self.sha = log[0]
-
-      if last_sha == sha
-        Rails.logger.info "Repository #{name} is already up-to-date"
-        return [], [], last_sha
-      end
     end
-
-    self.date = Time.at log[1].to_i
-
-    if last_sha.nil?
-      if full?
-        formulae = git 'ls-tree --name-only HEAD Library/Formula/'
-        formulae = formulae.lines.map { |file| ['A', file.strip] }
-
-        aliases = git 'ls-tree --name-only HEAD Library/Aliases/'
-        aliases = aliases.lines.map { |file| ['A', file.strip] }
-      else
-        formulae = git 'ls-tree --name-only -r HEAD'
-        formulae = formulae.lines.select { |file| file.match formula_regex }.
-          map { |file| ['A', file.strip] }
-
-        aliases = []
-      end
-
-      Rails.logger.info "Checked out #{sha} in #{path}"
-    else
-      diff = git "diff --name-status #{last_sha}..HEAD"
-      diff = diff.lines.map { |file| file.split }
-
-      formulae = diff.select { |file| file[1] =~ formula_regex }
-      aliases = full? ? diff.select { |file| file[1] =~ ALIAS_REGEX } : []
-
-      Rails.logger.info "Updated #{name} from #{last_sha} to #{sha}:"
-    end
-
-    unless full?
-      formulae_path = File.join Repository.main.path, 'Library', 'Formula'
-      Dir.glob File.join(path, '*.rb') do |formula|
-        `ln -s #{formula} #{formulae_path} 2>/dev/null`
-      end
-    end
-
-    return formulae, aliases, last_sha
   end
 
   def generate_history!
-    clone_or_pull
+    update_status
 
     Rails.logger.info "Resetting history of #{name}"
     self.formulae.each { |f| f.revisions.nullify }
@@ -168,7 +115,7 @@ class Repository
   end
 
   def refresh
-    formulae, aliases, last_sha = clone_or_pull
+    formulae, aliases, last_sha = update_status
 
     if formulae.size == 0 && aliases.size == 0
       Rails.logger.info 'No formulae changed.'
@@ -246,6 +193,50 @@ class Repository
 
   def to_param
     name
+  end
+
+  def update_status
+    clone_or_pull
+
+    last_sha = sha
+    log = git('log -1 --format=format:"%H %ct" HEAD').split
+    self.sha = log[0]
+    self.date = Time.at log[1].to_i
+
+    if last_sha.nil?
+      if full?
+        formulae = git 'ls-tree --name-only HEAD Library/Formula/'
+        formulae = formulae.lines.map { |file| ['A', file.strip] }
+
+        aliases = git 'ls-tree --name-only HEAD Library/Aliases/'
+        aliases = aliases.lines.map { |file| ['A', file.strip] }
+      else
+        formulae = git 'ls-tree --name-only -r HEAD'
+        formulae = formulae.lines.select { |file| file.match formula_regex }.
+          map { |file| ['A', file.strip] }
+
+        aliases = []
+      end
+
+      Rails.logger.info "Checked out #{sha} in #{path}"
+    else
+      diff = git "diff --name-status #{last_sha}..HEAD"
+      diff = diff.lines.map { |file| file.split }
+
+      formulae = diff.select { |file| file[1] =~ formula_regex }
+      aliases = full? ? diff.select { |file| file[1] =~ ALIAS_REGEX } : []
+
+      Rails.logger.info "Updated #{name} from #{last_sha} to #{sha}:"
+    end
+
+    unless full?
+      formulae_path = File.join Repository.main.path, 'Library', 'Formula'
+      Dir.glob File.join(path, '*.rb') do |formula|
+        `ln -s #{formula} #{formulae_path} 2>/dev/null`
+      end
+    end
+
+    return formulae, aliases, last_sha
   end
 
   def url

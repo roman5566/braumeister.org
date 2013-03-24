@@ -69,21 +69,8 @@ describe Repository do
     it 'clones a new repository' do
       File.expects(:exists?).with(repo.path).returns false
       repo.expects(:git).with "clone --quiet #{repo.url} #{repo.path}"
-      repo.expects(:git).with('log -1 --format=format:"%H %ct" HEAD').
-        returns 'deadbeef 1325844635'
-      repo.expects(:git).with('ls-tree --name-only HEAD Library/Formula/').
-        returns "Library/Formula/bazaar.rb\nLibrary/Formula/git.rb\nLibrary/Formula/mercurial.rb"
-      repo.expects(:git).with('ls-tree --name-only HEAD Library/Aliases/').
-        returns "Library/Aliases/bzr\nLibrary/Aliases/hg"
 
-      formulae, aliases, last_sha = repo.clone_or_pull
-
-      formulae.should eq([%w{A Library/Formula/bazaar.rb}, %w{A Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
-      aliases.should eq([%w{A Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
-      last_sha.should be_nil
-
-      repo.sha.should eq('deadbeef')
-      repo.date.should eq(Time.at 1325844635)
+      repo.clone_or_pull
     end
 
     it 'clones or updates the main repository for non-full repositories' do
@@ -94,45 +81,26 @@ describe Repository do
       repo.expects(:full?).returns false
       File.expects(:exists?).with(repo.path).returns false
       repo.expects(:git).with "clone --quiet #{repo.url} #{repo.path}"
-      repo.expects(:git).with('log -1 --format=format:"%H %ct" HEAD').
-        returns 'deadbeef 1325844635'
-      repo.expects(:sha).twice.returns 'deadbeef'
 
       repo.clone_or_pull
     end
 
     context 'updates an already known repository' do
 
-      before do
-        repo.sha = '01234567'
-        repo.expects(:git).with('diff --name-status 01234567..HEAD').
-          returns "D\tLibrary/Aliases/bzr\nA\tLibrary/Aliases/hg\nD\tLibrary/Formula/bazaar.rb\nM\tLibrary/Formula/git.rb\nA\tLibrary/Formula/mercurial.rb"
-      end
-
       it 'and clones it if it doesn\'t exist yet' do
         File.expects(:exists?).with(repo.path).returns false
         repo.expects(:git).with "clone --quiet #{repo.url} #{repo.path}"
-        repo.expects(:git).with('log -1 --format=format:"%H %ct" HEAD').
-          returns 'deadbeef 1325844635'
+
+        repo.clone_or_pull
       end
 
       it 'and fetches updates if it already exists' do
         File.expects(:exists?).with(repo.path).returns true
         repo.expects(:git).with('fetch --force --quiet origin master')
-        repo.expects(:git).with('log -1 --format=format:"%H %ct" FETCH_HEAD').
-          returns 'deadbeef 1325844635'
+        repo.expects(:git).with('diff --shortstat HEAD FETCH_HEAD').returns '1'
         repo.expects(:git).with("--work-tree #{repo.path} reset --hard --quiet FETCH_HEAD")
-      end
 
-      after do
-        formulae, aliases, last_sha = repo.clone_or_pull
-
-        formulae.should eq([%w{D Library/Formula/bazaar.rb}, %w{M Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
-        aliases.should eq([%w{D Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
-        last_sha.should eq('01234567')
-
-        repo.sha.should eq('deadbeef')
-        repo.date.should eq(Time.at 1325844635)
+        repo.clone_or_pull
       end
 
     end
@@ -160,7 +128,7 @@ describe Repository do
 
   describe '#refresh' do
     it 'does nothing when nothing has changed' do
-      repo.expects(:clone_or_pull).returns [[], [], 'deadbeef']
+      repo.expects(:update_status).returns [[], [], 'deadbeef']
       Rails.logger.expects(:info).with 'No formulae changed.'
       repo.expects(:generate_history).never
 
@@ -233,6 +201,59 @@ describe Repository do
 
     it 'returns a generic regex for other repos' do
       Repository.new.send(:formula_regex).should eq(/^(.+?\.rb)$/)
+    end
+
+  end
+
+  describe '#update_status' do
+
+    before do
+      repo.expects :clone_or_pull
+      repo.expects(:git).with('log -1 --format=format:"%H %ct" HEAD').
+        returns 'deadbeef 1325844635'
+    end
+
+    it 'can get the current status of a new full repository' do
+      repo.expects(:git).with('ls-tree --name-only HEAD Library/Formula/').
+        returns "Library/Formula/bazaar.rb\nLibrary/Formula/git.rb\nLibrary/Formula/mercurial.rb"
+      repo.expects(:git).with('ls-tree --name-only HEAD Library/Aliases/').
+        returns "Library/Aliases/bzr\nLibrary/Aliases/hg"
+
+      formulae, aliases, last_sha = repo.update_status
+
+      formulae.should eq([%w{A Library/Formula/bazaar.rb}, %w{A Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
+      aliases.should eq([%w{A Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
+      last_sha.should be_nil
+    end
+
+    it 'can get the current status of a new tap repository' do
+      repo.full = false
+      repo.expects(:git).with('ls-tree --name-only -r HEAD').
+        returns "bazaar.rb\ngit.rb\nmercurial.rb"
+
+      formulae, aliases, last_sha = repo.update_status
+
+      formulae.should eq([%w{A bazaar.rb}, %w{A git.rb}, %w{A mercurial.rb}])
+      aliases.should eq([])
+      last_sha.should be_nil
+    end
+
+    it 'can update the current status of a repository' do
+      repo.sha = '01234567'
+      repo.expects(:git).with('diff --name-status 01234567..HEAD').
+        returns "D\tLibrary/Aliases/bzr\nA\tLibrary/Aliases/hg\nD\tLibrary/Formula/bazaar.rb\nM\tLibrary/Formula/git.rb\nA\tLibrary/Formula/mercurial.rb"
+      Rails.logger.expects(:info).with 'Updated mxcl/homebrew from 01234567 to deadbeef:'
+
+      formulae, aliases, last_sha = repo.update_status
+
+      formulae.should eq([%w{D Library/Formula/bazaar.rb}, %w{M Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
+      aliases.should eq([%w{D Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
+      last_sha.should eq('01234567')
+    end
+
+    after do
+      repo.date.should eq(Time.at 1325844635)
+      repo.sha.should eq('deadbeef')
     end
 
   end
