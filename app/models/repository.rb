@@ -79,8 +79,9 @@ class Repository
         rev.subject = info[4]
         formulae.each do |formula|
           status, name = formula.split
-          next unless full? || name.match(formula_regex)
-          name = File.basename name.match(formula_regex)[1], '.rb'
+          name.match(formula_regex)
+          next unless full? || $~
+          name = File.basename $~[1], '.rb'
           formula = self.formulae.where(name: name).first
           next if formula.nil?
           formula.revisions << rev
