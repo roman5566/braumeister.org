@@ -87,10 +87,10 @@ class Repository
           formula.revisions << rev
           formula.date = rev.date if formula.date.nil? || rev.date > formula.date
           formula.save!
-          if status == 'A'
-            rev.added_formulae << formula
-          elsif status == 'M'
+          if status == 'M'
             rev.updated_formulae << formula
+          elsif status == 'A'
+            rev.added_formulae << formula
           elsif status == 'D'
             rev.removed_formulae << formula
           end
