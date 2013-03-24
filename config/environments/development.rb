@@ -17,4 +17,6 @@ Braumeister::Application.configure do
   config.mongoid.preload_models = false
 end
 
+Moped.logger = nil
+
 $stdout.sync = true
