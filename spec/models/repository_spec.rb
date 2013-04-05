@@ -115,7 +115,7 @@ describe Repository do
       repo.formulae << Formula.new(name: 'git', revisions: repo.revisions)
       repo.authors << Author.new(name: 'Sebastian Staudt')
 
-      repo.expects :clone_or_pull
+      repo.expects :update_status
       repo.expects :generate_history
 
       repo.generate_history!
