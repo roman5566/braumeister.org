@@ -9,8 +9,6 @@ branches:
     - production
     - staging
 
-gemfile: Gemfile.travis
-
 rvm:
  - 1.9.3
  - 2.0.0
