@@ -1,8 +1,10 @@
 language: ruby
 
+before_install:
+  - sed -i '2d' Gemfile
+
 before_script:
   - mongo braumeister-test --eval 'db.addUser("braumeister", "braumeister");'
-  - sed -i '2d' Gemfile
 
 branches:
   except:
