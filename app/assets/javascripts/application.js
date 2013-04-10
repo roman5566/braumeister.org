@@ -12,7 +12,7 @@ var formHandler = function() {
     $('#search').addClass('inactive');
   }
 
-  $('#search').live('focus', function() {
+  $('#search').on('focus', function() {
     $(this).removeClass('inactive');
     this.value = '';
   });
