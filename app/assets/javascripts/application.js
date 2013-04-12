@@ -8,16 +8,18 @@ $(function() {
 });
 
 var formHandler = function() {
-  if($('#search').val() == $('#search')[0].defaultValue) {
-    $('#search').addClass('inactive');
+  var search = $('#search');
+
+  if(search.val() == search[0].defaultValue) {
+    search.addClass('inactive');
   }
 
-  $('#search').on('focus', function() {
+  search.on('focus', function() {
     $(this).removeClass('inactive');
     this.value = '';
   });
 
-  $('#search').blur(function() {
+  search.blur(function() {
     if($(this).val().match(/^\s*$/)) {
       $(this).addClass('inactive');
       this.value = this.defaultValue;
@@ -25,8 +27,8 @@ var formHandler = function() {
   });
 
   $('#search-form').submit(function() {
-      if(!$('#search').hasClass('inactive')) {
-          var searchUrl = '/search/' + $('#search').val();
+      if(!search.hasClass('inactive')) {
+          var searchUrl = '/search/' + search.val();
           if(typeof(repositoryName) !== 'undefined') {
             searchUrl = '/repos/' + repositoryName + searchUrl;
           }
