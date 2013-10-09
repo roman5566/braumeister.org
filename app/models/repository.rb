@@ -288,8 +288,14 @@ class Repository
               $LOADED_FEATURES.reject! { |p| p =~ /\/#{formula_name}.rb/ }
             end
 
-            name = File.join path, name unless full? || name.start_with?(path)
-            formula = Formula.factory name
+            if full?
+              loader = Formulary::StandardLoader
+            else
+              loader = Formulary::FromPathLoader
+              name = File.join path, name unless name.start_with?(path)
+            end
+
+            formula = loader.new(name).get_formula
             formulae_info[formula.name] = {
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,

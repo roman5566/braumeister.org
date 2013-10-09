@@ -172,13 +172,19 @@ describe Repository do
     end
 
     it 'uses a forked process to load formula information' do
+      class Formulary
+        class StandardLoader; end
+      end
+
       git = mock deps: [], homepage: 'http://git-scm.com', keg_only?: false, name: 'git', version: '1.7.9'
+      git_loader = mock get_formula: git
       memcached = mock deps: %w(libevent), homepage: 'http://memcached.org/', keg_only?: false, name: 'memcached', version: '1.4.11'
+      memcached_loader = mock get_formula: memcached
 
       Formula.expects(:class_s).with('git').returns :Git
-      Formula.expects(:factory).with('git').returns git
+      Formulary::StandardLoader.expects(:new).with('git').returns git_loader
       Formula.expects(:class_s).with('memcached').returns :Memcached
-      Formula.expects(:factory).with('memcached').returns memcached
+      Formulary::StandardLoader.expects(:new).with('memcached').returns memcached_loader
 
       formulae_info = repo.send :formulae_info, %w{git memcached}
       formulae_info.should eq({
