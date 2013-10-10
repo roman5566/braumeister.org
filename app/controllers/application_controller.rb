@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 class ApplicationController < ActionController::Base
   protect_from_forgery
@@ -27,7 +27,15 @@ class ApplicationController < ActionController::Base
     end
 
     all_repos = Repository.all.order_by [:name, :asc]
-    @alt_repos = all_repos - [ @repository ]
+    @alt_repos = {}
+    (all_repos - [ @repository ]).each do |repo|
+      ('a'..'z').select do |letter|
+        if repo.formulae.letter(letter).where(removed: false).exists?
+          @alt_repos[repo] = letter
+          break
+        end
+      end
+    end
 
     fresh_when last_modified: all_repos.max_by(&:updated_at).updated_at, public: true
   end
