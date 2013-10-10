@@ -1,9 +1,7 @@
-# encoding: utf-8
-
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 atom_feed :id => "tag:braumeister.org,2012:#{@repository.name}",
           :schema_data => 2012,
