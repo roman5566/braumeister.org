@@ -1,3 +1,5 @@
+ENV['MEMCACHIER_SERVERS'] ||= ''
+
 Braumeister::Application.configure do
   config.cache_classes = true
 
@@ -18,9 +20,9 @@ Braumeister::Application.configure do
   config.log_level = :warn
 
   config.cache_store = :dalli_store,
-                       ENV["MEMCACHIER_SERVERS"].split(","),
+                       ENV['MEMCACHIER_SERVERS'].split(','),
                        {
-                         :username => ENV["MEMCACHIER_USERNAME"],
-                         :password => ENV["MEMCACHIER_PASSWORD"]
+                         username: ENV['MEMCACHIER_USERNAME'],
+                         password: ENV['MEMCACHIER_PASSWORD']
                        }
 end
