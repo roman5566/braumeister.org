@@ -3,7 +3,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2013, Sebastian Staudt
 
 require 'text'
 
@@ -43,7 +43,7 @@ class FormulaeController < ApplicationController
     end
 
     @letters = ('A'..'Z').select do |letter|
-      @repository.formulae.letter(letter.downcase).where(removed: false).exists?
+      @repository.formulae.letter(letter).where(removed: false).exists?
     end
 
     @formulae = @formulae.page(params[:page]).per 50
