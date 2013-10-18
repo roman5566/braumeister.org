@@ -1,5 +1,7 @@
 <script type="text/javascript">
-  <%= "var repositoryName = '#{@repository.name}';" unless @repository.main? %>
+  <% unless @repository.main? %>
+    var repositoryName = '<%= @repository.name %>';
+  <% end %>
   $(formHandler);
 </script>
 
