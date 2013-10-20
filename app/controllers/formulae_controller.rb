@@ -44,7 +44,7 @@ class FormulaeController < ApplicationController
       @repository.formulae.letter(letter).where(removed: false).exists?
     end
 
-    @formulae = @formulae.page(params[:page]).per 50
+    @formulae = @formulae.page(params[:page]).per 30
 
     fresh_when etag: @repository.sha, public: true
   end
