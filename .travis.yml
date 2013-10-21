@@ -13,12 +13,12 @@ branches:
 
 rvm:
  - 2.0.0
- - jruby-19mode
+ - jruby-20mode
  - ruby-head
 
 matrix:
   allow_failures:
-    - rvm: jruby-19mode
+    - rvm: jruby-20mode
     - rvm: ruby-head
 
 services: mongodb
