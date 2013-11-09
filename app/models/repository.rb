@@ -128,7 +128,7 @@ class Repository
 
     if formulae.size == 0 && aliases.size == 0
       Rails.logger.info 'No formulae changed.'
-      updated_at_will_change!
+      touch
       save!
       return
     end
