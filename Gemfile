@@ -13,7 +13,7 @@ gem 'unicorn', '~> 4.7.0', platforms: :ruby
 group :assets do
   gem 'compass-rails', '~> 1.0.0'
   gem 'sass-rails', '~> 3.2.3'
-  gem 'uglifier', '~> 1.3.0'
+  gem 'uglifier', '~> 2.3.1'
 end
 
 group :development do
