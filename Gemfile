@@ -18,7 +18,7 @@ end
 
 group :development do
   gem 'foreman', '~> 0.60'
-  gem 'ruby-prof', '~> 0.12.2', platforms: :ruby
+  gem 'ruby-prof', '~> 0.13.0', platforms: :ruby
 end
 
 group :development, :test do
