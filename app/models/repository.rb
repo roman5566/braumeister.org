@@ -9,7 +9,7 @@ class Repository
   include Mongoid::Timestamps::Updated
 
   ALIAS_REGEX = /^(?:Library\/)?Aliases\/(.+?)$/
-  MAIN        = 'mxcl/homebrew'
+  MAIN        = 'Homebrew/homebrew'
 
   field :_id, type: String, default: ->{ name }
   field :date, type: Time
