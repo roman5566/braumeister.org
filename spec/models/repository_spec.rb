@@ -250,7 +250,7 @@ describe Repository do
       repo.sha = '01234567'
       repo.expects(:git).with('diff --name-status 01234567..HEAD').
         returns "D\tLibrary/Aliases/bzr\nA\tLibrary/Aliases/hg\nD\tLibrary/Formula/bazaar.rb\nM\tLibrary/Formula/git.rb\nA\tLibrary/Formula/mercurial.rb"
-      Rails.logger.expects(:info).with 'Updated mxcl/homebrew from 01234567 to deadbeef:'
+      Rails.logger.expects(:info).with "Updated #{Repository::MAIN} from 01234567 to deadbeef:"
 
       formulae, aliases, last_sha = repo.update_status
 

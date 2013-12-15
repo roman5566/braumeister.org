@@ -18,18 +18,18 @@ describe FormulaeController do
       controller.instance_variable_get(:@repository).should eq(repo)
     end
 
-    it 'redirects to the short url for mxcl/homebrew' do
+    it 'redirects to the short url for Repository::MAIN' do
       request = mock
-      request.expects(:url).twice.returns 'http://braumeister.org/repos/mxcl/homebrew/browse'
+      request.expects(:url).twice.returns "http://braumeister.org/repos/#{Repository::MAIN}/browse"
       controller.expects(:request).twice.returns request
       controller.expects(:redirect_to).with '/browse'
 
       controller.send :select_repository
     end
 
-    it 'the repository defaults to mxcl/homebrew' do
+    it 'the repository defaults to Repository::MAIN' do
       repo = mock
-      Repository.expects(:find).with('mxcl/homebrew').returns repo
+      Repository.expects(:find).with(Repository::MAIN).returns repo
 
       controller.send :select_repository
 

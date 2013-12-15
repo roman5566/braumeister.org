@@ -84,12 +84,13 @@ class FormulaeController < ApplicationController
   private
 
   def select_repository
-    if request.url.match '/repos/mxcl/homebrew'
-      redirect_to request.url.split('/repos/mxcl/homebrew', 2)[1]
+    main_repo_url = "/repos/#{Repository::MAIN}"
+    if request.url.match main_repo_url
+      redirect_to request.url.split(main_repo_url, 2)[1]
       return
     end
 
-    params[:repository_id] ||= 'mxcl/homebrew'
+    params[:repository_id] ||= Repository::MAIN
     @repository = Repository.find params[:repository_id]
   end
 
