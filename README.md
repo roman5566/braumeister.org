@@ -83,6 +83,6 @@ Follow braumeister.org on Twitter
 
  [1]: https://github.com/koraktor/braumeister.org
  [2]: https://github.com/koraktor/braumeister.org/issues
- [3]: http://mxcl.github.com/homebrew
+ [3]: http://brew.sh
  [4]: https://gemnasium.com/koraktor/braumeister.org
  [5]: https://travis-ci.org/koraktor/braumeister.org
