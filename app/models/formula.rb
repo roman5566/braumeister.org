@@ -25,8 +25,8 @@ class Formula
   belongs_to :repository
   has_and_belongs_to_many :revisions, inverse_of: nil
 
-  has_and_belongs_to_many :deps, class_name: 'Formula', inverse_of: :revdeps
-  has_and_belongs_to_many :revdeps, class_name: 'Formula', inverse_of: :deps
+  has_and_belongs_to_many :deps, class_name: self.to_s, inverse_of: :revdeps
+  has_and_belongs_to_many :revdeps, class_name: self.to_s, inverse_of: :deps
 
   scope :letter, ->(letter) { where(name: /^#{letter.downcase}/) }
 
