@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    fresh_when last_modified: all_repos.max_by(&:updated_at).updated_at, public: true
+    fresh_when etag: all_repos.max_by(&:updated_at).sha, public: true
   end
 
   def not_found
