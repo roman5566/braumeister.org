@@ -84,9 +84,9 @@ class FormulaeController < ApplicationController
   private
 
   def select_repository
-    main_repo_url = "/repos/#{Repository::MAIN}"
+    main_repo_url = "/repos/#{Repository::MAIN}/"
     if request.url.match main_repo_url
-      redirect_to request.url.split(main_repo_url, 2)[1]
+      redirect_to '/' + request.url.split(main_repo_url, 2)[1]
       return
     end
 
