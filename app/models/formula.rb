@@ -39,6 +39,11 @@ class Formula
     "https://raw.github.com/#{repository.name}/HEAD/#{path}"
   end
 
+  def generate_history!
+    revisions.clear
+    repository.generate_formula_history self
+  end
+
   private
 
   def set_id

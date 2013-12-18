@@ -41,6 +41,12 @@ class Repository
     end
   end
 
+  def generate_formula_history(formula)
+    Rails.logger.info "Regenerating history for formula #{formula.name}..."
+
+    analyze_commits " --follow -- #{formula.path}"
+  end
+
   def generate_history!
     update_status
 
@@ -59,50 +65,10 @@ class Repository
 
     Rails.logger.info "Regenerating history for #{ref}..."
 
-    log_cmd = "log --format=format:'%H%x00%ct%x00%aE%x00%aN%x00%s' --name-status --no-merges --reverse #{ref}"
+    log_cmd = ref
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
 
-    commits = git(log_cmd).split(/\n\n/)
-    commit_progress = 0
-    commit_count = commits.size
-    while !commits.empty?
-      commit_batch = commits.shift 100
-      commit_batch.each do |commit|
-        commit = commit.lines.to_a
-        info, formulae = commit.shift.strip.split("\x00"), commit
-        rev = self.revisions.build sha: info[0]
-        rev.author = self.authors.find_or_initialize_by email: info[2]
-        rev.author.name = info[3]
-        rev.author.save!
-        rev.date = info[1].to_i
-        rev.subject = info[4]
-        formulae.each do |formula|
-          status, name = formula.split
-          name.match(formula_regex)
-          next unless full? || $~
-          name = File.basename $~[1], '.rb'
-          formula = self.formulae.where(name: name).first
-          next if formula.nil?
-          formula.revisions << rev
-          formula.date = rev.date if formula.date.nil? || rev.date > formula.date
-          formula.save!
-          if status == 'M'
-            rev.updated_formulae << formula
-          elsif status == 'A'
-            rev.added_formulae << formula
-          elsif status == 'D'
-            rev.removed_formulae << formula
-          end
-        end
-        rev.save!
-        self.revisions << rev
-      end
-
-      save!
-
-      commit_progress += commit_batch.size
-      Rails.logger.debug "Analyzed #{commit_progress} of #{commit_count} revisions."
-    end
+    analyze_commits log_cmd
   end
 
   def git(command)
@@ -253,6 +219,52 @@ class Repository
   end
 
   private
+
+  def analyze_commits(log_params)
+    log_cmd = "log --format=format:'%H%x00%ct%x00%aE%x00%aN%x00%s' --name-status --no-merges #{log_params}"
+
+    commits = git(log_cmd).split /\n\n/
+    commit_progress = 0
+    commit_count = commits.size
+    while !commits.empty?
+      commit_batch = commits.pop 100
+      commit_batch.each do |commit|
+        commit = commit.lines.to_a
+        info, formulae = commit.shift.strip.split("\x00"), commit
+        rev = self.revisions.build sha: info[0]
+        rev.author = self.authors.find_or_initialize_by email: info[2]
+        rev.author.name = info[3]
+        rev.author.save!
+        rev.date = info[1].to_i
+        rev.subject = info[4]
+        formulae.each do |formula|
+          status, name = formula.split
+          name.match(formula_regex)
+          next unless full? || $~
+          name = File.basename $~[1], '.rb'
+          formula = self.formulae.where(name: name).first
+          next if formula.nil?
+          formula.revisions << rev
+          formula.date = rev.date if formula.date.nil? || rev.date > formula.date
+          formula.save!
+          if status == 'M' || status =~ /R\d\d\d/
+            rev.updated_formulae << formula
+          elsif status == 'A'
+            rev.added_formulae << formula
+          elsif status == 'D'
+            rev.removed_formulae << formula
+          end
+        end
+        rev.save!
+        self.revisions << rev
+      end
+
+      save!
+
+      commit_progress += commit_batch.size
+      Rails.logger.debug "Analyzed #{commit_progress} of #{commit_count} revisions."
+    end
+  end
 
   def formulae_info(formulae)
     base_repo = full? ? self : Repository.main
