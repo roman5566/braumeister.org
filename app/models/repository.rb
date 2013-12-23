@@ -44,7 +44,7 @@ class Repository
   def generate_formula_history(formula)
     Rails.logger.info "Regenerating history for formula #{formula.name}..."
 
-    analyze_commits " --follow -- #{formula.path}"
+    analyze_commits "--follow -- #{formula.path}"
   end
 
   def generate_history!
@@ -87,6 +87,60 @@ class Repository
 
   def path
     "#{Braumeister::Application.tmp_path}/repos/#{name}"
+  end
+
+  def recover_deleted_formulae
+    reset_head
+
+    log_cmd = "log --format=format:'%H' --diff-filter=D --find-renames --name-only"
+    log_cmd << " -- 'Formula' 'Library/Formula'" if full?
+
+    commits = git(log_cmd).split /\n\n/
+    commits.each do |commit|
+      files = commit.lines.to_a
+      sha = files.shift.strip
+
+      formulae = files.map do |path|
+        next unless path =~ formula_regex
+        $1 if $1 != '__template' && self.formulae.where(name: $1).empty?
+      end
+      formulae.compact!
+
+      next if formulae.empty?
+
+      Rails.logger.debug "Trying to recover the following formulae: #{formulae.join ', '}"
+      begin
+        sha << '^'
+        git "--work-tree #{path} reset --hard --quiet #{sha}"
+
+        Rails.logger.debug "Trying to import missing formulae from commit #{sha}…"
+
+        formulae_info = formulae_info formulae, true
+        formulae.each do |name|
+          formula = self.formulae.find_or_initialize_by name: name
+          formula.deps = []
+          formula_info = formulae_info.delete formula.name
+          next if formula_info.nil?
+          formula_info[:deps].each do |dep|
+            dep_formula = self.formulae.where(name: dep).first
+            if dep_formula.nil?
+              dep_formula = Repository.main.formulae.where(name: dep).first
+            end
+            formula.deps << dep_formula unless dep_formula.nil?
+          end
+          formula.homepage = formula_info[:homepage]
+          formula.keg_only = formula_info[:keg_only]
+          formula.removed  = true
+          formula.version  = formula_info[:version]
+          formula.save
+        end
+      rescue
+        Rails.logger.debug "Commit #{sha} could not be imported because of an error: #{$!.message}"
+        retry unless sha =~ /\^\^\^\^\^/
+      end
+    end
+
+    reset_head
   end
 
   def refresh
@@ -164,6 +218,10 @@ class Repository
     generate_history last_sha
 
     Rails.logger.info "#{added} formulae added, #{modified} formulae modified, #{removed} formulae removed."
+  end
+
+  def reset_head
+    git "--work-tree #{path} reset --hard --quiet origin/master"
   end
 
   def to_param
@@ -266,7 +324,7 @@ class Repository
     end
   end
 
-  def formulae_info(formulae)
+  def formulae_info(formulae, backward_compat = false)
     base_repo = full? ? self : Repository.main
 
     pipe_read, pipe_write = IO.pipe
@@ -285,6 +343,8 @@ class Repository
 
         Object.send(:remove_const, :Formula) if Object.const_defined? :Formula
 
+        require 'backward_compat' if backward_compat
+
         require 'Library/Homebrew/global'
         require 'Library/Homebrew/formula'
 
@@ -300,14 +360,19 @@ class Repository
               $LOADED_FEATURES.reject! { |p| p =~ /\/#{formula_name}.rb/ }
             end
 
-            if full?
-              loader = Formulary::StandardLoader
+            if backward_compat
+              name = File.join path, name unless full? || name.start_with?(path)
+              formula = Formula.factory name
             else
-              loader = Formulary::FromPathLoader
-              name = File.join path, name unless name.start_with?(path)
+              if full?
+                loader = Formulary::StandardLoader
+              else
+                loader = Formulary::FromPathLoader
+                name = File.join path, name unless name.start_with?(path)
+              end
+              formula = loader.new(name).get_formula
             end
 
-            formula = loader.new(name).get_formula
             formulae_info[formula.name] = {
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,
