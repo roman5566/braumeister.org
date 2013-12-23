@@ -90,6 +90,7 @@ class Repository
   end
 
   def recover_deleted_formulae
+    clone_or_pull
     reset_head
 
     log_cmd = "log --format=format:'%H' --diff-filter=D -M --name-only"
