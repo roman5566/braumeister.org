@@ -92,7 +92,7 @@ class Repository
   def recover_deleted_formulae
     reset_head
 
-    log_cmd = "log --format=format:'%H' --diff-filter=D --find-renames --name-only"
+    log_cmd = "log --format=format:'%H' --diff-filter=D -M --name-only"
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
 
     commits = git(log_cmd).split /\n\n/
