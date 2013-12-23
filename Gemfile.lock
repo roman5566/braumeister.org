@@ -33,7 +33,7 @@ GEM
       json
     arel (3.0.2)
     builder (3.0.4)
-    chunky_png (1.2.6)
+    chunky_png (1.2.9)
     compass (0.12.2)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
