@@ -18,6 +18,8 @@ module Kernel
       "Xcode 5.0.2\nBuild version 5A3005"
     elsif command == 'php -v'
       "5.4"
+    elsif command =~ /^\/usr\/sbin\/sysctl -n/
+      "1"
     else
       orig_backtick command
     end
