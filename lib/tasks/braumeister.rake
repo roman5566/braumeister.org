@@ -58,7 +58,10 @@ namespace :braumeister do
         repo.save
       end
 
-      @repos.each &:refresh
+      @repos.each do |repo|
+        repo.refresh
+        repo.recover_deleted_formulae
+      end
     end
   end
 
