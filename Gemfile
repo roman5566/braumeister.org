@@ -28,6 +28,7 @@ end
 
 group :production do
   gem 'airbrake', '~> 3.1.0'
+  gem 'rails_12factor', '~> 0.0.2'
 end
 
 group :test do
