@@ -2,8 +2,8 @@
 common: &default_settings
   app_name: <%= ENV["NEW_RELIC_APPNAME"] || 'braumeister.org' %>
   license_key: <%= ENV["NEW_RELIC_LICENSE_KEY"] %>
-  monitor_mode: true
-  ssl: false
+  monitor_mode: false
+  ssl: true
   developer_mode: false
   capture_params: true
   log_level: warn
@@ -12,12 +12,8 @@ common: &default_settings
 
 development:
   <<: *default_settings
-  monitor_mode: false
   developer_mode: true
-
-test:
-  <<: *default_settings
-  monitor_mode: false
 
 production:
   <<: *default_settings
+  monitor_mode: true
