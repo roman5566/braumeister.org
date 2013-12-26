@@ -2,10 +2,11 @@
 @import "compass/css3/box-shadow";
 @import url(http://fonts.googleapis.com/css?family=Neuton:400,800);
 
-$black:  #000000;
-$beige:  #ffffbb;
-$orange: #dd9800;
-$sand:   #b5af87;
+$black:    #000000;
+$beige:    #ffffbb;
+$darkGray: #555050;
+$orange:   #dd9800;
+$sand:     #b5af87;
 
 html {
   background: #353030;
@@ -443,6 +444,22 @@ input {
   color:      $orange;
   font-size:  1.3em;
   margin:     1.5em 0;
+
+  &:-moz-placeholder {
+    color: $darkGray;
+  }
+
+  &::-moz-placeholder {
+    color: $darkGray;
+  }
+
+  &::-webkit-input-placeholder {
+    color: $darkGray;
+  }
+
+  &:-ms-input-placeholder {
+    color: $darkGray;
+  }
 }
 
 nav {
