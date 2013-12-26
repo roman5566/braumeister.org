@@ -16,5 +16,6 @@ Repository.find_or_create_by name: 'Homebrew/homebrew-versions'
 
 Repository.all.each do |repo|
   repo.refresh
+  repo.recover_deleted_formulae
   repo.save!
 end
