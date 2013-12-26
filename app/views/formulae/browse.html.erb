@@ -1,9 +1,3 @@
-<script type="text/javascript">
-  <% unless @repository.main? %>
-    var repositoryName = '<%= @repository.name %>';
-  <% end %>
-</script>
-
 <h1>Package listing</h1>
 
 <% if @repository.main? %>

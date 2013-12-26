@@ -7,7 +7,8 @@ $(function() {
 
   $('#search-form').submit(function() {
     var searchUrl = '/search/' + $('#search').val();
-    if(typeof(repositoryName) !== 'undefined') {
+    var repositoryName = $('body').data('repository');
+    if (typeof(repositoryName) !== 'undefined') {
       searchUrl = '/repos/' + repositoryName + searchUrl;
     }
     window.location = searchUrl;
