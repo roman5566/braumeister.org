@@ -69,6 +69,7 @@ LICENSE file.
 
  * Sebastian Staudt – koraktor(at)gmail.com
  * Andrey Ognevsky – a.ognevsky(at)gmail.com
+ * Michiel Staessen – staessenmichiel(at)gmail.com
 
 ## See also
 
