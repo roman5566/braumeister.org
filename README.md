@@ -35,11 +35,12 @@ mongo
 > db.addUser("braumeister", "braumeister")
 ```
 
-After that you can run the following commands:
+After that you can run the following commands to run the application locally:
 
 ```ruby
+bundle install
 rake db:seed
-rails server
+foreman start
 ```
 
 ## Contribute
