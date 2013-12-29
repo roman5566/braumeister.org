@@ -14,9 +14,9 @@ module ApplicationHelper
   def timestamp(time)
     options = {
       class: 'timeago',
-      title: time.getutc.iso8601
+      datetime: time.getutc.iso8601
     }
-    content_tag :abbr, l(time, format: :long), options
+    content_tag :time, l(time, format: :long), options
   end
 
   def title

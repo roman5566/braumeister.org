@@ -3,7 +3,8 @@
 //= require jquery.timeago
 
 $(function() {
-  $('abbr.timeago').timeago();
+  $.timeago.settings.localeTitle = true;
+  $('time.timeago').timeago();
 
   $('#search-form').submit(function() {
     var searchUrl = '/search/' + $('#search').val();
