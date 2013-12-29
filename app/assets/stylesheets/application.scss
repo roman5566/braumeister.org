@@ -371,13 +371,30 @@ div.recently-added h3 {
   color: #44cc44;
 }
 
-div.recently-removed h3 {
-  color: #cc4444;
+div.recently-removed {
+
+  @include border-radius(4px);
+
+  border:  2px solid #a15f11;
+  margin:  1em;
+  padding: 0.4em;
+
+  a {
+    font-size:   1.2em !important;
+    font-weight: normal;
+  }
+
+  h5 {
+    color:       #cc4444;
+    margin:      0.3em 0;
+    text-shadow: 1px 1px 1px $black;
+  }
+
 }
 
-div.recently-added, div.recently-removed, div.recently-updated {
+div.recently-added, div.recently-updated {
   float: left;
-  width: 31%;
+  width: 48%;
 
   div.formula strong {
     float:          right;
@@ -395,7 +412,7 @@ div.recently-added, div.recently-removed, div.recently-updated {
   }
 }
 
-div.recently-removed + * {
+div.recently-removed {
   clear: both;
 }
 

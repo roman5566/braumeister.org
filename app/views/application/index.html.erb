@@ -30,15 +30,9 @@
   </div>
 </div>
 
-<% reset_cycle %>
-
 <div class="recently-removed">
-  <h3>Recently removed formulae</h3>
-  <div class="listing">
-    <% @removed.each do |formula| %>
-      <%= render partial: 'recent', locals: { formula: formula } %>
-    <% end %>
-  </div>
+  <h5>Recently removed formulae</h5>
+  <%= @removed.map { |f| formula_link f }.join(', ').html_safe %>
 </div>
 
 <div id="timestamps">
