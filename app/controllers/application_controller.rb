@@ -10,21 +10,19 @@ class ApplicationController < ActionController::Base
 
   def index
     @repository = Repository.main
-    formulae = @repository.formulae.order_by [:date, :desc]
 
-    @added, @updated, @removed = [], [], []
-    formulae.each do |formula|
-      if @added.size < 5 && formula.revision_ids.size == 1
-        @added << formula
-      elsif @updated.size < 5 && !formula.removed? &&
-            formula.revision_ids.size > 1
-        @updated << formula
-      elsif @removed.size < 5 && formula.removed?
-        @removed << formula
-      end
+    @added = @repository.formulae.with_size(revision_ids: 1).
+                order_by(%i{date desc}).
+                limit 5
 
-      break if @added.size == 5 && @updated.size == 5 && @removed.size == 5
-    end
+    @updated = @repository.formulae.where(removed: false).
+                not.with_size(revision_ids: 1).
+                order_by(%i{date desc}).
+                limit 5
+
+    @removed = @repository.formulae.where(removed: true).
+            order_by(%i{date desc}).
+            limit 5
 
     all_repos = Repository.all.order_by [:name, :asc]
     @alt_repos = {}
