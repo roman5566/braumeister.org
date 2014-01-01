@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 class ApplicationController < ActionController::Base
   protect_from_forgery
@@ -29,11 +29,8 @@ class ApplicationController < ActionController::Base
     all_repos = Repository.all.order_by [:name, :asc]
     @alt_repos = {}
     (all_repos - [ @repository ]).each do |repo|
-      ('a'..'z').select do |letter|
-        if repo.formulae.letter(letter).where(removed: false).exists?
-          @alt_repos[repo] = letter
-          break
-        end
+      @alt_repos[repo] = ('a'..'z').find do |letter|
+        repo.formulae.letter(letter).where(removed: false).exists?
       end
     end
 
