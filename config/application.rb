@@ -19,6 +19,8 @@ module Braumeister
 
     config.encoding = "utf-8"
 
+    config.i18n.enforce_available_locales = true
+
     def self.tmp_path
       @@tmp_path ||= File.join Rails.root, 'tmp'
     end
