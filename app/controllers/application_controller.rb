@@ -12,13 +12,13 @@ class ApplicationController < ActionController::Base
     @repository = Repository.main
 
     @added = @repository.formulae.with_size(revision_ids: 1).
-                order_by(%i{date desc}).
-                limit 5
+            order_by(%i{date desc}).
+            limit 5
 
     @updated = @repository.formulae.where(removed: false).
-                not.with_size(revision_ids: 1).
-                order_by(%i{date desc}).
-                limit 5
+            not.with_size(revision_ids: 1).
+            order_by(%i{date desc}).
+            limit 5
 
     @removed = @repository.formulae.where(removed: true).
             order_by(%i{date desc}).
