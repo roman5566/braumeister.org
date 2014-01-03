@@ -27,9 +27,7 @@ class ApplicationController < ActionController::Base
     all_repos = Repository.all.order_by [:name, :asc]
     @alt_repos = {}
     (all_repos - [ @repository ]).each do |repo|
-      @alt_repos[repo] = ('a'..'z').find do |letter|
-        repo.formulae.letter(letter).where(removed: false).exists?
-      end
+      @alt_repos[repo] = repo.formulae.order_by(%i{name asc}).first.name[0]
     end
 
     fresh_when etag: all_repos.max_by(&:updated_at).sha, public: true
