@@ -29,7 +29,7 @@ atom_feed :id => "tag:braumeister.org,2012:#{@repository.name}",
     end
   end
 
-  @revisions.each do |revision|
+  @revisions.includes(:author, :added_formulae, :updated_formulae, :removed_formulae).each do |revision|
     revision.added_formulae.each { |formula| add_entry.call('added', formula, revision) }
     revision.updated_formulae.each { |formula| add_entry.call('updated', formula, revision) }
     revision.removed_formulae.each { |formula| add_entry.call('removed', formula, revision) }
