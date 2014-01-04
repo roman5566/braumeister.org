@@ -4,7 +4,6 @@
 # Copyright (c) 2012-2014, Sebastian Staudt
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
 
