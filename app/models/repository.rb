@@ -237,6 +237,8 @@ class Repository
     self.sha = log[0]
     self.date = Time.at log[1].to_i
 
+    return [], [], sha if sha == last_sha
+
     if last_sha.nil?
       if full?
         formulae = git 'ls-tree --name-only HEAD Library/Formula/'
