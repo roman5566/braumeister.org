@@ -301,8 +301,7 @@ class Repository
         rev.subject = info[4]
         formulae.each do |formula|
           status, name = formula.split
-          name.match(formula_regex)
-          next unless full? || $~
+          next unless name =~ formula_regex
           name = File.basename $~[1], '.rb'
           formula = self.formulae.where(name: name).first
           next if formula.nil?
