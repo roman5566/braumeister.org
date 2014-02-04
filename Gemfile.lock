@@ -79,7 +79,7 @@ GEM
       origin (~> 1.0)
       tzinfo (~> 0.3.29)
     moped (1.5.1)
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     newrelic_rpm (3.7.1.182)
     origin (1.1.0)
     polyglot (0.3.3)
