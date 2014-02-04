@@ -6,7 +6,7 @@ gem 'jquery-rails', '~> 3.0.4'
 gem 'kaminari', '~> 0.15.0'
 gem 'mongoid', '~> 3.1.2'
 gem 'newrelic_rpm', '~> 3.7.0'
-gem 'rails', '3.2.14'
+gem 'rails', '3.2.16'
 gem 'text', '~> 1.2.0'
 gem 'unicorn', '~> 4.8.1', platforms: :ruby
 
