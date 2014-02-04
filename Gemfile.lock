@@ -155,7 +155,7 @@ GEM
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicorn (4.7.0)
+    unicorn (4.8.1)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -180,4 +180,4 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   text (~> 1.2.0)
   uglifier (~> 2.4.0)
-  unicorn (~> 4.7.0)
+  unicorn (~> 4.8.1)
