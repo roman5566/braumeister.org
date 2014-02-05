@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.1.0'
 
 gem 'dalli', '~> 2.7.0'
-gem 'jquery-rails', '~> 3.0.4'
+gem 'jquery-rails', '~> 3.1.0'
 gem 'kaminari', '~> 0.15.0'
 gem 'mongoid', '~> 3.1.2'
 gem 'newrelic_rpm', '~> 3.7.0'
