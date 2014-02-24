@@ -21,4 +21,9 @@ matrix:
     - rvm: jruby-head
     - rvm: ruby-head
 
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/05a6d2ff3a4a9c33343f
+
 services: mongodb
