@@ -153,7 +153,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.38)
-    uglifier (2.4.0)
+    uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicorn (4.8.2)
@@ -180,5 +180,5 @@ DEPENDENCIES
   rspec-rails (~> 2.14.0)
   sass-rails (~> 3.2.3)
   text (~> 1.2.0)
-  uglifier (~> 2.4.0)
+  uglifier (~> 2.5.0)
   unicorn (~> 4.8.1)
