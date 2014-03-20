@@ -1,7 +1,7 @@
 braumeister.org
 ===============
 
-[![Build Status](https://secure.travis-ci.org/koraktor/braumeister.org.svg)](http://travis-ci.org/koraktor/braumeister.org) [![Dependency Status](https://gemnasium.com/koraktor/braumeister.org.svg)](https://gemnasium.com/koraktor/braumeister.org) [![Code Climate](https://codeclimate.com/github/koraktor/braumeister.org.png)](https://codeclimate.com/github/koraktor/braumeister.org) [![Coverage Status](https://coveralls.io/repos/koraktor/braumeister.org/badge.pngg?branch=master)](https://coveralls.io/r/koraktor/braumeister.org)
+[![Build Status](https://secure.travis-ci.org/koraktor/braumeister.org.svg)](http://travis-ci.org/koraktor/braumeister.org) [![Dependency Status](https://gemnasium.com/koraktor/braumeister.org.svg)](https://gemnasium.com/koraktor/braumeister.org) [![Code Climate](https://codeclimate.com/github/koraktor/braumeister.org.png)](https://codeclimate.com/github/koraktor/braumeister.org) [![Coverage Status](https://coveralls.io/repos/koraktor/braumeister.org/badge.png?branch=master)](https://coveralls.io/r/koraktor/braumeister.org)
 
 braumeister.org is a Rails application that gathers package information from
 Homebrew, the MacOS X package manager.
