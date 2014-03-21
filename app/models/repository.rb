@@ -11,13 +11,13 @@ class Repository
   ALIAS_REGEX = /^(?:Library\/)?Aliases\/(.+?)$/
   MAIN        = 'Homebrew/homebrew'
 
-  field :_id, type: String, default: ->{ name }
+  field :_id, type: String, overwrite: true, default: ->{ name }
   field :date, type: Time
   field :full, type: Boolean, default: false
   field :name, type: String
   field :sha, type: String
 
-  has_many :authors, validate: false
+  has_and_belongs_to_many :authors, validate: false
   has_many :formulae, dependent: :destroy, validate: false
   has_many :revisions, dependent: :destroy, validate: false
 
@@ -225,7 +225,6 @@ class Repository
 
   def regenerate!
     FileUtils.rm_rf path
-    Author.delete_all repository_id: id
     Formula.delete_all repository_id: id
     Revision.delete_all repository_id: id
 
@@ -330,8 +329,10 @@ class Repository
       commit_batch.each do |commit|
         info, *formulae = commit.lines
         sha, timestamp, email, name, subject = info.strip.split "\x00"
-        rev = self.revisions.build sha: sha
-        rev.author = self.authors.find_or_initialize_by email: email
+        rev = Revision.find_or_initialize_by sha: sha
+        self.revisions << rev
+        rev.author = Author.find_or_initialize_by email: email
+        self.authors << rev.author
         rev.author.name = name
         rev.author.save!
         rev.date = timestamp.to_i
@@ -354,7 +355,6 @@ class Repository
           end
         end
         rev.save!
-        self.revisions << rev
       end
 
       save!

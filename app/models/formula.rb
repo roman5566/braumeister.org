@@ -8,7 +8,7 @@ class Formula
   include Mongoid::Document
   include Mongoid::Timestamps::Updated
 
-  field :_id, type: String
+  field :_id, type: String, overwrite: true
   field :aliases, type: Array
   field :date, type: Time
   field :devel_version, type: String

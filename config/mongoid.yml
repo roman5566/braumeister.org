@@ -6,15 +6,11 @@ development:
       database: braumeister
       username: braumeister
       password: braumeister
-  options:
-    identity_map_enabled: true
 
 production:
   sessions:
     default:
       uri: <%= ENV['MONGOLAB_URI'] %>
-  options:
-    identity_map_enabled: true
 
 test:
   sessions:

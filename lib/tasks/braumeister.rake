@@ -41,35 +41,27 @@ namespace :braumeister do
   Rails.logger = Logger.new STDOUT
 
   task :select_repos, [:repo] => :environment do |_, args|
-    Mongoid.unit_of_work disable: :all do
-      @repos = if args[:repo].nil?
-        ([Repository.main] + Repository.all).uniq
-      else
-        Repository.where(name: args[:repo])
-      end
+    @repos = if args[:repo].nil?
+      ([Repository.main] + Repository.all).uniq
+    else
+      Repository.where(name: args[:repo])
     end
   end
 
   desc 'Completely regenerates one or all repositories and their formulae'
   task_with_tracing :regenerate, [:repo] => :select_repos do
-    Mongoid.unit_of_work disable: :all do
-      @repos.each &:regenerate!
-    end
+    @repos.each &:regenerate!
   end
 
   desc 'Regenerates the history of one or all repositories'
   task_with_tracing :regenerate_history, [:repo] => :select_repos do
-    Mongoid.unit_of_work disable: :all do
-      @repos.each &:generate_history!
-    end
+    @repos.each &:generate_history!
   end
 
   desc 'Pulls the latest changes from one or all repositories'
   task_with_tracing :update, [:repo] => :select_repos do
-    Mongoid.unit_of_work disable: :all do
-      @repos.each do |repo|
-        airbrake_rescued { repo.refresh }
-      end
+    @repos.each do |repo|
+      airbrake_rescued { repo.refresh }
     end
   end
 

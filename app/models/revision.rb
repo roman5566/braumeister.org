@@ -7,7 +7,7 @@ class Revision
 
   include Mongoid::Document
 
-  field :_id, type: String, default: ->{ sha }
+  field :_id, type: String, overwrite: true, default: ->{ sha }
   field :date, type: Time
   field :subject, type: String
   field :sha, type: String

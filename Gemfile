@@ -4,16 +4,16 @@ ruby '2.1.2'
 gem 'dalli', '~> 2.7.0'
 gem 'jquery-rails', '~> 3.1.0'
 gem 'kaminari', '~> 0.16.0'
-gem 'mongoid', '~> 3.1.2'
+gem 'mongoid', '~> 4.0.0'
 gem 'newrelic_rpm', '~> 3.7.0'
-gem 'rails', '3.2.18'
+gem 'rails', '4.1.4'
 gem 'text', '~> 1.2.0'
 gem 'unicorn', '~> 4.8.1', platforms: :ruby
 
 group :assets do
   gem 'compass-rails', '~> 1.1.0'
   gem 'font-awesome-sass', '~> 4.1.0'
-  gem 'sass-rails', '~> 3.2.3'
+  gem 'sass-rails', '~> 4.0.3'
   gem 'uglifier', '~> 2.5.0'
 end
 

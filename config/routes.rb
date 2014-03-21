@@ -23,7 +23,7 @@ Braumeister::Application.routes.draw do
     resources :formula, controller: :formulae, only: :show,
               constraints: { id: /.*/ }
 
-    match '/feed' => 'formulae#feed', as: :feed
+    get '/feed' => 'formulae#feed', as: :feed
   end
 
   resources :formulae, only: :browse, path: 'browse' do
@@ -42,12 +42,12 @@ Braumeister::Application.routes.draw do
   resources :formula, controller: :formulae, only: :show,
             constraints: { id: /.*/ }
 
-  match '/feed' => 'formulae#feed', as: :feed
+  get '/feed' => 'formulae#feed', as: :feed
 
-  match '/sitemap' => 'application#sitemap', as: :sitemap
+  get '/sitemap' => 'application#sitemap', as: :sitemap
 
   root to: 'application#index'
 
-  match '*url', to: 'application#not_found'
+  get '*url', to: 'application#not_found'
 
 end
