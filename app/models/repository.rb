@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 class Repository
 
@@ -25,15 +25,17 @@ class Repository
     find MAIN
   end
 
-  def clone_or_pull
+  def clone_or_pull(reset = true)
     Repository.main.clone_or_pull unless full?
 
     if File.exists? path
       Rails.logger.info "Pulling changes from #{name} into #{path}"
       git 'fetch --force --quiet origin master'
-      diff = git 'diff --shortstat HEAD FETCH_HEAD'
-      unless diff.empty?
-        git "--work-tree #{path} reset --hard --quiet FETCH_HEAD"
+      if reset
+        diff = git 'diff --shortstat HEAD FETCH_HEAD'
+        unless diff.empty?
+          git "--work-tree #{path} reset --hard --quiet FETCH_HEAD"
+        end
       end
     else
       Rails.logger.info "Cloning #{name} into #{path}"
@@ -90,7 +92,7 @@ class Repository
   end
 
   def recover_deleted_formulae
-    clone_or_pull
+    clone_or_pull false
     reset_head
 
     log_cmd = "log --format=format:'%H' --diff-filter=D -M --name-only"
@@ -189,10 +191,8 @@ class Repository
           end
           formula.deps << dep_formula unless dep_formula.nil?
         end
-        formula.homepage = formula_info[:homepage]
-        formula.keg_only = formula_info[:keg_only]
-        formula.removed  = false
-        formula.version  = formula_info[:version]
+        formula.update_metadata formula_info
+        formula.removed = false
       end
       formula.save!
     end
@@ -222,11 +222,27 @@ class Repository
   end
 
   def reset_head
-    git "--work-tree #{path} reset --hard --quiet origin/master"
+    git "--work-tree #{path} reset --hard --quiet #{sha}"
   end
 
   def to_param
     name
+  end
+
+  def update_metadata
+    clone_or_pull false
+    reset_head
+
+    formula_path = path
+    formula_path = File.join formula_path, 'Library', 'Formula' if full?
+    formula_path = File.join formula_path, '**', '*.rb'
+    formulae = Dir.glob(formula_path).map { |f| File.basename f, '.rb' }
+
+    formulae_info(formulae).each do |name, formula_info|
+      formula = self.formulae.find_or_initialize_by name: name
+      formula.update_metadata formula_info
+      formula.save
+    end
   end
 
   def update_status
@@ -378,7 +394,9 @@ class Repository
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,
               keg_only: formula.keg_only? != false,
-              version: formula.version.to_s
+              stable_version: (formula.stable.version.to_s rescue formula.version.to_s),
+              devel_version: (formula.devel.version.to_s rescue nil),
+              head_version: (formula.head.version.to_s rescue nil)
             }
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
                  SyntaxError

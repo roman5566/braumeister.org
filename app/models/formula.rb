@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 class Formula
 
@@ -11,12 +11,14 @@ class Formula
   field :_id, type: String
   field :aliases, type: Array
   field :date, type: Time
+  field :devel_version, type: String
+  field :head_version, type: String
   field :keg_only, type: Boolean, default: false
   field :removed, type: Boolean, default: false
   field :name, type: String
   field :homepage, type: String
   field :path, type: String
-  field :version, type: String
+  field :stable_version, type: String
 
   after_build :set_id
 
@@ -42,6 +44,18 @@ class Formula
   def generate_history!
     revisions.clear
     repository.generate_formula_history self
+  end
+
+  def update_metadata(formula_info)
+    self.homepage = formula_info[:homepage]
+    self.keg_only = formula_info[:keg_only]
+    self.stable_version = formula_info[:stable_version]
+    self.devel_version = formula_info[:devel_version]
+    self.head_version = formula_info[:head_version]
+  end
+
+  def version
+    stable_version || devel_version || head_version
   end
 
   private
