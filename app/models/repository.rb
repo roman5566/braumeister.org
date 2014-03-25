@@ -400,7 +400,8 @@ class Repository
             }
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
                  SyntaxError
-            error_msg = "Formula '#{name}' could not be imported because of an error."
+            error_msg = "Formula '#{name}' could not be imported because of an error:\n" <<
+                    "    #{$!.class}: #{$!.message}"
             Rails.logger.warn error_msg
             if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
               Airbrake.notify $!, { error_message: error_msg }
