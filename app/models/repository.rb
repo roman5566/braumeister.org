@@ -133,10 +133,8 @@ class Repository
             end
             formula.deps << dep_formula unless dep_formula.nil?
           end
-          formula.homepage = formula_info[:homepage]
-          formula.keg_only = formula_info[:keg_only]
           formula.removed  = true
-          formula.version  = formula_info[:version]
+          formula.update_metadata formula_info
           formula.save
         end
       rescue
