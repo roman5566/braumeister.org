@@ -484,7 +484,7 @@ nav {
   text-align: center;
 }
 
-nav span.current, ul#letters span.current {
+nav span.current, ul#letters a.current, ul#letters span.current {
   color:       $sand;
   font-weight: bold;
   text-shadow: $orange 0 0 4px;
