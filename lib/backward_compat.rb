@@ -21,8 +21,12 @@ module Kernel
       Rails.logger.debug "#{$!.message} in #{name}"
       candidate_files = $LOAD_PATH.map { |path| File.join(path, name) + '.rb' }
       file = candidate_files.find { |file| File.exist? file }
-      eval ENCODING_HEADER + File.read(file), TOPLEVEL_BINDING
-      $LOADED_FEATURES << file
+      begin
+        eval ENCODING_HEADER + File.read(file), TOPLEVEL_BINDING
+        $LOADED_FEATURES << file
+      rescue Exception
+        # ignored
+      end
     end
   end
 
