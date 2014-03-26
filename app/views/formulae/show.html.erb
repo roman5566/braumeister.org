@@ -21,16 +21,6 @@
   <% end %>
 </div>
 
-<div id="last-change">
-  <h2>Last change</h2>
-  <strong class="subject"><%= @current_revision.subject %></strong>
-  <div id="change-info">
-    by <strong><%= @current_revision.author.name %></strong>,
-    <strong><%= timestamp @current_revision.date %></strong><br>
-    Git commit SHA: <%= link_to @current_revision.sha, "https://github.com/#{@repository.name}/commit/#{@current_revision.sha}##{@formula.path}" %>
-  </div>
-</div>
-
 <% unless @formula.deps.empty? %>
   <div id="deps">
     <h2>Dependencies</h2>
@@ -56,6 +46,16 @@
     </ul>
   </div>
 <% end %>
+
+<div id="last-change">
+  <h2>Last change</h2>
+  <strong class="subject"><%= @current_revision.subject %></strong>
+  <div id="change-info">
+    by <strong><%= @current_revision.author.name %></strong>,
+    <strong><%= timestamp @current_revision.date %></strong><br>
+    Git commit SHA: <%= link_to @current_revision.sha, "https://github.com/#{@repository.name}/commit/#{@current_revision.sha}##{@formula.path}" %>
+  </div>
+</div>
 
 <% unless @revisions.empty? %>
 <div id="history">
