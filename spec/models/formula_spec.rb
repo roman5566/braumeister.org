@@ -12,6 +12,17 @@ describe Formula do
     Formula.new name: 'git', repository: repo
   end
 
+  describe '#generate_history!' do
+    it 'resets and regenerates the history of the formula' do
+      formula.repository.stubs(:generate_formula_history).with formula
+      formula.revisions = [ Revision.new, Revision.new, Revision.new ]
+
+      formula.generate_history!
+
+      formula.revisions.should eq []
+    end
+  end
+
   describe '#set_id' do
     it 'should update the formula’s id' do
       formula.send :set_id
