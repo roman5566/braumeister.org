@@ -176,9 +176,9 @@ describe Repository do
         class StandardLoader; end
       end
 
-      git = mock deps: [], homepage: 'http://git-scm.com', keg_only?: false, name: 'git', version: '1.7.9'
+      git = mock deps: [], homepage: 'http://git-scm.com', keg_only?: false, name: 'git', stable: mock(version: '1.7.9'), devel: nil, head: mock(version: 'HEAD')
       git_loader = mock get_formula: git
-      memcached = mock deps: %w(libevent), homepage: 'http://memcached.org/', keg_only?: false, name: 'memcached', version: '1.4.11'
+      memcached = mock deps: %w(libevent), homepage: 'http://memcached.org/', keg_only?: false, name: 'memcached', stable: mock(version: '1.4.11'), devel: mock(version: '2.0.0.dev') , head: nil
       memcached_loader = mock get_formula: memcached
 
       Formula.expects(:class_s).with('git').returns :Git
@@ -188,8 +188,8 @@ describe Repository do
 
       formulae_info = repo.send :formulae_info, %w{git memcached}
       formulae_info.should eq({
-        'git' => { deps: [], homepage: 'http://git-scm.com', keg_only: false, version: '1.7.9' },
-        'memcached' => { deps: %w(libevent), homepage: 'http://memcached.org/', keg_only: false, version: '1.4.11' }
+        'git' => { deps: [], homepage: 'http://git-scm.com', keg_only: false, stable_version: '1.7.9', devel_version: nil, head_version:'HEAD' },
+        'memcached' => { deps: %w(libevent), homepage: 'http://memcached.org/', keg_only: false, stable_version: '1.4.11', devel_version: '2.0.0.dev', head_version: nil }
       })
     end
 
