@@ -115,7 +115,7 @@ class Repository
       Rails.logger.debug "Trying to recover the following formulae: #{formulae.join ', '}"
       begin
         sha << '^'
-        git "--work-tree #{path} reset --hard --quiet #{sha}"
+        reset_head sha
 
         Rails.logger.debug "Trying to import missing formulae from commit #{sha}…"
 
@@ -214,7 +214,7 @@ class Repository
     Rails.logger.info "#{added} formulae added, #{modified} formulae modified, #{removed} formulae removed."
   end
 
-  def reset_head
+  def reset_head(sha = self.sha)
     git "--work-tree #{path} reset --hard --quiet #{sha}"
   end
 
