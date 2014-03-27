@@ -149,19 +149,16 @@ class Repository
   def refresh
     formulae, aliases, last_sha = update_status
 
-    if formulae.size == 0 && aliases.size == 0
+    if formulae.empty? && aliases.empty?
       Rails.logger.info 'No formulae changed.'
       touch
       save!
       return
     end
 
-    updated_formulae = []
-    formulae.each do |type, fpath|
-      updated_formulae << fpath.match(formula_regex)[1] unless type == 'D'
-    end
-    formulae_info = formulae_info updated_formulae
-    updated_formulae = nil
+    formulae_info = formulae_info formulae.map do |type, fpath|
+      fpath.match(formula_regex)[1] unless type == 'D'
+    end.compact
 
     added = modified = removed = 0
     formulae.each do |type, fpath|
@@ -181,15 +178,11 @@ class Repository
           modified += 1
           Rails.logger.debug "Updated formula #{formula.name}."
         end
-        formula.deps = []
         formula_info = formulae_info.delete formula.name
         next if formula_info.nil?
-        formula_info[:deps].each do |dep|
-          dep_formula = self.formulae.where(name: dep).first
-          if dep_formula.nil?
-            dep_formula = Repository.main.formulae.where(name: dep).first
-          end
-          formula.deps << dep_formula unless dep_formula.nil?
+        formula.deps = formula_info[:deps].map do |dep|
+          self.formulae.where(name: dep).first ||
+            Repository.main.formulae.where(name: dep).first
         end
         formula.update_metadata formula_info
         formula.removed = false
