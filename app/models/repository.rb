@@ -98,16 +98,15 @@ class Repository
     log_cmd = "log --format=format:'%H' --diff-filter=D -M --name-only"
     log_cmd << " -- 'Formula' 'Library/Formula'" if full?
 
-    commits = git(log_cmd).split /\n\n/
-    commits.each do |commit|
-      files = commit.lines.to_a
-      sha = files.shift.strip
+    git(log_cmd).split(/\n\n/).each do |commit|
+      sha, *files = commit.lines
+      sha.strip!
 
       formulae = files.map do |path|
         next unless path =~ formula_regex
         name = File.basename $1, '.rb'
         $1 if name != '__template' && self.formulae.where(name: name).empty?
-      end
+      end.compact
       formulae.compact!
 
       next if formulae.empty?
@@ -123,15 +122,11 @@ class Repository
         formulae.each do |name|
           formula_name = File.basename name, '.rb'
           formula = self.formulae.find_or_initialize_by name: formula_name
-          formula.deps = []
           formula_info = formulae_info.delete formula.name
           next if formula_info.nil?
-          formula_info[:deps].each do |dep|
-            dep_formula = self.formulae.where(name: dep).first
-            if dep_formula.nil?
-              dep_formula = Repository.main.formulae.where(name: dep).first
-            end
-            formula.deps << dep_formula unless dep_formula.nil?
+          formula.deps = formula_info[:deps].map do |dep|
+            self.formulae.where(name: dep).first ||
+              Repository.main.formulae.where(name: dep).first
           end
           formula.removed  = true
           formula.update_metadata formula_info
