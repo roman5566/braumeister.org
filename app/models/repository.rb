@@ -151,9 +151,9 @@ class Repository
       return
     end
 
-    formulae_info = formulae_info formulae.map do |type, fpath|
+    formulae_info = formulae_info formulae.map { |type, fpath|
       fpath.match(formula_regex)[1] unless type == 'D'
-    end.compact
+    }.compact
 
     added = modified = removed = 0
     formulae.each do |type, fpath|
