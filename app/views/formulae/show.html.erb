@@ -35,12 +35,12 @@
 
 <% reset_cycle %>
 
-<% unless @formula.revdeps.empty? %>
+<% unless @formula.revdeps.where(removed: false).empty? %>
   <div id="revdeps">
     <h2>Reverse dependencies</h2>
     <%= t '.revdeps_html', name: @formula.name, count: @formula.revdeps.size %>
     <ul>
-      <% @formula.revdeps.each do |revdep| %>
+      <% @formula.revdeps.where(removed: false).each do |revdep| %>
         <%= render partial: 'formula', locals: { formula: revdep } %>
       <% end %>
     </ul>
