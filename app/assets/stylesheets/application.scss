@@ -144,6 +144,10 @@ div#content {
         background: #595945;
       }
 
+      &.removed a.formula {
+        color: #bb4444;
+      }
+
       a {
         font-weight: normal;
       }
