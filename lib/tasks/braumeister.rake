@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 if defined? ::NewRelic
   def task_with_tracing(*options)
@@ -49,19 +49,7 @@ namespace :braumeister do
   desc 'Completely regenerates one or all repositories and their formulae'
   task_with_tracing :regenerate, [:repo] => :select_repos do
     Mongoid.unit_of_work disable: :all do
-      @repos.each do |repo|
-        FileUtils.rm_rf repo.path
-        repo.authors.clear
-        repo.formulae.clear
-        repo.revisions.clear
-        repo.sha = nil
-        repo.save
-      end
-
-      @repos.each do |repo|
-        repo.refresh
-        repo.recover_deleted_formulae
-      end
+      @repos.each &:regenerate!
     end
   end
 

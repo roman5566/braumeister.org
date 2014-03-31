@@ -213,6 +213,27 @@ class Repository
     Rails.logger.info "#{added} formulae added, #{modified} formulae modified, #{removed} formulae removed."
   end
 
+  def regenerate!
+    FileUtils.rm_rf path
+    Author.where(repository_id: id).delete
+    Formula.where(repository_id: id).delete
+    Revision.where(repository_id: id).delete
+
+    Formula.each do |formula|
+      formula.update_attribute :dep_ids, formula.dep_ids.reject! { |i| i.starts_with? "#{id}/" }
+      formula.update_attribute :revdep_ids, formula.revdep_ids.reject! { |i| i.starts_with? "#{id}/" }
+    end
+
+    authors.clear
+    formulae.clear
+    revisions.clear
+    self.sha = nil
+    save!
+
+    refresh
+    recover_deleted_formulae
+  end
+
   def reset_head(sha = self.sha)
     git "--work-tree #{path} reset --hard --quiet #{sha}"
   end
