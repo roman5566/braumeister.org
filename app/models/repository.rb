@@ -407,10 +407,16 @@ class Repository
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,
               keg_only: formula.keg_only? != false,
-              stable_version: (formula.stable.version.to_s rescue formula.version.to_s),
+              stable_version: (formula.stable.version.to_s rescue nil),
               devel_version: (formula.devel.version.to_s rescue nil),
               head_version: (formula.head.version.to_s rescue nil)
             }
+
+            if formulae_info[formula.name][:stable_version].nil? &&
+                formulae_info[formula.name][:devel_version].nil? &&
+                formulae_info[formula.name][:head_version].nil?
+              formulae_info[formula.name][:stable_version] = formula.version.to_s
+            end
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
                  SyntaxError, TypeError
             error_msg = "Formula '#{name}' could not be imported because of an error:\n" <<
