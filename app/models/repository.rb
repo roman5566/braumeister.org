@@ -43,6 +43,10 @@ class Repository
     end
   end
 
+  def find_formula(name)
+    git("ls-files | grep -E '(^|/)#{name}.rb'").lines.first.strip rescue nil
+  end
+
   def generate_formula_history(formula)
     Rails.logger.info "Regenerating history for formula #{formula.name}..."
 
@@ -352,6 +356,7 @@ class Repository
         require 'Library/Homebrew/global'
         require 'Library/Homebrew/formula'
 
+        require 'sandbox_formulary'
         require 'sandbox_macos'
         require 'sandbox_utils'
 
