@@ -246,15 +246,14 @@ class Repository
     clone_or_pull false
     reset_head
 
-    formula_path = path
-    formula_path = File.join formula_path, 'Library', 'Formula' if full?
-    formula_path = File.join formula_path, '**', '*.rb'
-    formulae = Dir.glob(formula_path).select { |f| f =~ formula_regex }
+    formulae = self.formulae.where(removed: false).map do |formula|
+      formula.path || formula.name
+    end
 
     formulae_info(formulae).each do |name, formula_info|
-      formula = self.formulae.find_or_initialize_by name: name
+      formula = self.formulae.find_by name: name
       formula.update_metadata formula_info
-      formula.save
+      formula.save!
     end
   end
 
