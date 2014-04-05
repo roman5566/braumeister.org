@@ -32,6 +32,18 @@ class Formula
 
   scope :letter, ->(letter) { where(name: /^#{letter.downcase}/) }
 
+  def best_spec
+    if stable_version
+      :stable
+    elsif devel_version
+      :devel
+    elsif head_version
+      :head
+    else
+      nil
+    end
+  end
+
   def path
     path = repository.full? ? File.join('Library', 'Formula') : self[:path]
     (path.nil? ? name : File.join(path, name)) + '.rb'

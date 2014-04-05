@@ -1,4 +1,6 @@
 <div class="formula <%= cycle 'even', 'odd' %>">
   <%= formula_link formula %>
-  <strong><%= formula.version %></strong><br>
+  <strong class="version spec-<%= formula.best_spec %>">
+    <%= formula.version %>
+  </strong><br>
 </div>

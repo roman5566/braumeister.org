@@ -1,5 +1,6 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/box-shadow";
+@import "font-awesome";
 @import url(http://fonts.googleapis.com/css?family=Neuton:400,800);
 
 $black:    #000000;
@@ -76,12 +77,21 @@ div#alternatives {
   }
 }
 
-div#basic h2:last-child {
-  margin-bottom: 0.2em;
-}
+div#basic h2 {
+  vertical-align: top;
 
-div#basic h2.removed:first-line {
-  color: #dd0000 !important;
+  &:last-child {
+    margin-bottom: 0.2em;
+  }
+
+  &.removed:first-line {
+    color: #dd0000 !important;
+  }
+
+  em {
+    left:     20%;
+    position: absolute;
+  }
 }
 
 div#basic, div#deps, div#last-change, div#history, div#revdeps {
@@ -150,10 +160,6 @@ div#content {
 
       a {
         font-weight: normal;
-      }
-
-      strong.version {
-        color: $orange;
       }
     }
   }
@@ -295,7 +301,7 @@ div#history {
 
   tr {
     &:first-child td {
-      color:       #ffffbb;
+      color:       $beige;
       font-size:   11pt !important;
       font-weight: bold;
     }
@@ -501,6 +507,86 @@ nav span.current, ul#letters a.current, ul#letters span.current {
   color:       $sand;
   font-weight: bold;
   text-shadow: $orange 0 0 4px;
+}
+
+div.recently-added, div.recently-updated {
+  strong.version {
+    &:before {
+      display: block;
+      float:   left;
+      width:   1em;
+    }
+  }
+}
+
+strong.version {
+  @include border-radius(4px);
+
+  background: $darkGray;
+  border:     1px solid $sand;
+  clear:      left;
+  color:      $sand;
+  display:    block;
+  margin-top: 3px;
+  text-align: center;
+  width:      6em;
+
+  &:before {
+    float: left;
+    font-family: FontAwesome;
+    margin-left: 2px;
+    text-align: left;
+  }
+}
+
+div.formula strong.version {
+  display: inline-block;
+}
+
+div#basic div.versions {
+  display:        inline-block;
+  padding-bottom: 0;
+
+  * {
+    margin-top: -1px;
+  }
+
+  .spec-devel {
+    @include border-radius(0)
+  }
+
+  .spec-head {
+    @include border-top-radius(0)
+  }
+
+  .spec-stable {
+    @include border-bottom-radius(0)
+  }
+}
+
+em {
+  &.spec-devel, &.spec-head, &.spec-stable {
+    &:before {
+      font-family:  FontAwesome;
+      font-style:   normal;
+      margin-right: 4px;
+    }
+  }
+}
+
+.spec-stable:before {
+  color:   #3abb22;
+  content: $fa-var-check;
+}
+
+.spec-devel:before {
+  color:   #dad826;
+  content: $fa-var-wrench;
+}
+
+.spec-head:before {
+  color:   #d38400;
+  content: $fa-var-exclamation-circle;
 }
 
 ul#letters {

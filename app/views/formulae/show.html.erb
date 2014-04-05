@@ -7,9 +7,13 @@
   <% if @formula.removed? %>
     <h2 class="removed">Formula was removed<br>Last version was:
   <% else %>
-    <h2>Current Version:
+    <h2>Current versions:
   <% end %>
-  <em><%= @formula.version %></em></h2>
+  <div class="versions">
+    <strong class="version spec-stable"><%= @formula.stable_version || 'N/A' %></strong>
+    <strong class="version spec-devel"><%= @formula.devel_version || 'N/A' %></strong>
+    <strong class="version spec-head"><%= @formula.head_version || 'N/A' %></strong>
+  </div></h2>
   <% unless @formula.homepage.nil? %>
     <h2>Homepage: <em><%= link_to @formula.homepage, @formula.homepage %></em></h2>
   <% end %>
