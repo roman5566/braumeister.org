@@ -191,7 +191,6 @@ class Repository
 
     aliases.each do |type, apath|
       name = apath.match(ALIAS_REGEX)[1]
-      formula = nil
       if type == 'D'
         formula = self.formulae.where(aliases: name).first
         next if formula.nil?

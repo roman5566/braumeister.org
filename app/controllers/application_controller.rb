@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
             order_by(%i{date desc}).
             limit 5
 
-    all_repos = Repository.all.order_by [:name, :asc]
+    all_repos = Repository.order_by [:name, :asc]
     @alt_repos = {}
     (all_repos - [ @repository ]).each do |repo|
       @alt_repos[repo] = repo.formulae.order_by(%i{name asc}).first.name[0]
