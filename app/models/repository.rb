@@ -135,6 +135,7 @@ class Repository
           formula.removed  = true
           formula.update_metadata formula_info
           formula.save
+          Rails.logger.info "Successfully recovered #{formula.name} from commit #{sha}"
         end
       rescue
         Rails.logger.debug "Commit #{sha} could not be imported because of an error: #{$!.message}"
