@@ -16,4 +16,10 @@ $(function() {
 
     return false;
   });
+
+  var showAll = $('tr.show-all');
+  showAll.click(function() {
+    $('tr.hidden').slideToggle();
+    showAll.remove();
+  });
 });

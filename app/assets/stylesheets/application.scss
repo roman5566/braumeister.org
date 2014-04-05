@@ -308,6 +308,16 @@ div#history {
       background: #737359;
       color:      $beige;
     }
+
+    &.hidden {
+      display: none;
+    }
+
+    &.show-all {
+      cursor: pointer;
+      font-weight: bold;
+      text-align:  center;
+    }
   }
 }
 
