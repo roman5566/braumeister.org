@@ -26,7 +26,7 @@
     <h2>Dependencies</h2>
       <%= t '.deps_html', name: @formula.name, count: @formula.deps.size %>
     <ul>
-      <% @formula.deps.each do |dep| %>
+      <% @formula.deps.order_by([:name, :asc]).each do |dep| %>
         <%= render partial: 'formula', locals: { formula: dep } %>
       <% end %>
     </ul>
@@ -40,7 +40,7 @@
     <h2>Reverse dependencies</h2>
     <%= t '.revdeps_html', name: @formula.name, count: @formula.revdeps.size %>
     <ul>
-      <% @formula.revdeps.where(removed: false).each do |revdep| %>
+      <% @formula.revdeps.where(removed: false).order_by([:name, :asc]).each do |revdep| %>
         <%= render partial: 'formula', locals: { formula: revdep } %>
       <% end %>
     </ul>
