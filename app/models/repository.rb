@@ -17,9 +17,9 @@ class Repository
   field :name, type: String
   field :sha, type: String
 
-  has_many :authors
-  has_many :formulae, dependent: :destroy
-  has_many :revisions, dependent: :destroy
+  has_many :authors, validate: false
+  has_many :formulae, dependent: :destroy, validate: false
+  has_many :revisions, dependent: :destroy, validate: false
 
   def self.main
     find MAIN
