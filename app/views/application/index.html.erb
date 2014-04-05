@@ -6,12 +6,12 @@
 
   <%= link_to 'Browse all formulae', letter_formulae_path('a'), class: 'center' %>
 
-  <h2>Search a formula:</h2>
+  <h2><%= icon 'search' %> Search a formula:</h2>
   <%= render partial: 'formulae/search' %>
 </div>
 
 <div class="recently-added">
-  <h3>Recently added formulae</h3>
+  <h3><%= icon 'plus-square' %> Recently added formulae</h3>
   <div class="listing">
     <% @added.each do |formula| %>
       <%= render partial: 'recent', locals: { formula: formula } %>
@@ -22,7 +22,7 @@
 <% reset_cycle %>
 
 <div class="recently-updated">
-  <h3>Recently updated formulae</h3>
+  <h3><%= icon 'pencil-square' %> Recently updated formulae</h3>
   <div class="listing">
     <% @updated.each do |formula| %>
       <%= render partial: 'recent', locals: { formula: formula } %>
@@ -31,7 +31,7 @@
 </div>
 
 <div class="recently-removed">
-  <h5>Recently removed formulae</h5>
+  <h5><%= icon 'minus-square' %> Recently removed formulae</h5>
   <%= @removed.map { |f| formula_link f }.join(', ').html_safe %>
 </div>
 
@@ -43,7 +43,7 @@
 
 <% unless @alt_repos.empty? %>
   <div id="alternatives">
-    <h2>Alternative repositories:</h2>
+    <h2><%= icon 'code-fork' %> Alternative repositories:</h2>
     <div class="listing">
     <% @alt_repos.each do |repo, letter| %>
       <div class="repo"><%= link_to repo.name, letter_repository_formulae_path(repo, letter) %></div>
