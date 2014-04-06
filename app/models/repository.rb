@@ -403,7 +403,7 @@ class Repository
               formula = loader.new(name).get_formula :stable
             end
 
-            formulae_info[formula.name] = {
+            current_formula_info = formulae_info[formula.name] = {
               deps: formula.deps.map(&:to_s),
               homepage: formula.homepage,
               keg_only: formula.keg_only? != false,
@@ -412,10 +412,10 @@ class Repository
               head_version: (formula.head.version.to_s rescue nil)
             }
 
-            if formulae_info[formula.name][:stable_version].nil? &&
-                formulae_info[formula.name][:devel_version].nil? &&
-                formulae_info[formula.name][:head_version].nil?
-              formulae_info[formula.name][:stable_version] = formula.version.to_s
+            if current_formula_info[:stable_version].nil? &&
+                current_formula_info[:devel_version].nil? &&
+                current_formula_info[:head_version].nil?
+                current_formula_info[:stable_version] = formula.version.to_s
             end
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
                  SyntaxError, TypeError
