@@ -43,6 +43,12 @@ class Repository
     end
   end
 
+  def feed_link
+    feed_link = '/feed.atom'
+    feed_link = "/repos/#{name}" + feed_link unless name == MAIN
+    feed_link
+  end
+
   def find_formula(name)
     git("ls-files | grep -E '(^|/)#{name}.rb'").lines.first.strip rescue nil
   end

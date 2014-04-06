@@ -30,6 +30,16 @@ a {
   &:hover, &:active {
     color: $beige !important;
   }
+
+  &.feed-link {
+    display:     block;
+    float:       right;
+    font-size:   20pt;
+    position:    absolute;
+    right:       2.3em;
+    text-shadow: 2px 2px 2px $black;
+    top:         1.8em;
+  }
 }
 
 div#alternatives {
@@ -119,6 +129,7 @@ div#content {
   border:     2px solid $beige;
   color:      $sand;
   padding:    1em 3.5em;
+  position:   relative;
   text-align: justify;
 
   a {

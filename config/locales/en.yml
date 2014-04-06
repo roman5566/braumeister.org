@@ -1,10 +1,12 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 en:
   formulae:
+    browse:
+      feed_title: "Stay up-to-date – subscribe to %{name}'s feed."
     show:
       deps_html:
         one:   "<em>%{name}</em> requires the following formula to be installed:"
