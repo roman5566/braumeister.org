@@ -11,7 +11,7 @@
 
 <%= link_to icon('rss-square'), @repository.feed_link, class: 'feed-link', title: t('.feed_title', name: @repository.name) %>
 
-<%= render partial: 'search' %>
+<%= render partial: 'search', locals: { with_icon: true } %>
 
 <ul id="letters">
   <% ('A'..'Z').each do |letter|

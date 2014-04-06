@@ -471,6 +471,13 @@ h3 {
   font-size: 12pt;
 }
 
+i.search-icon {
+  color:        $orange;
+  font-size:    18pt;
+  margin-right: 0.2em;
+  text-shadow:  3px 3px 3px $black;
+}
+
 img {
   border: none;
 }
