@@ -154,6 +154,7 @@ describe Repository do
       Object.expects(:remove_const).with :Formula
       repo.expects(:require).with 'Library/Homebrew/global'
       repo.expects(:require).with 'Library/Homebrew/formula'
+      repo.expects(:require).with 'sandbox_formulary'
       repo.expects(:require).with 'sandbox_macos'
       repo.expects(:require).with 'sandbox_utils'
     end
