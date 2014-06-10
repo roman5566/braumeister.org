@@ -22,17 +22,11 @@ else
   end
 end
 
-if defined?(Airbrake) && !Airbrake.configuration.api_key.nil?
-  def airbrake_rescued(&action)
-    begin
-      action.call
-    rescue
-      Airbrake.notify $!
-    end
-  end
-else
-  def airbrake_rescued(&action)
+def airbrake_rescued(&action)
+  begin
     action.call
+  rescue
+    Airbrake.notify $!
   end
 end
 
