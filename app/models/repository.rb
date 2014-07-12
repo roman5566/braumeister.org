@@ -373,7 +373,7 @@ class Repository
                 loader = Formulary::FromPathLoader
                 name = File.join path, name unless name.start_with?(path)
               end
-              formula = loader.new(name).get_formula
+              formula = loader.new(name).get_formula :stable
             end
 
             formulae_info[formula.name] = {
