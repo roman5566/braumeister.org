@@ -11,7 +11,7 @@ class IO
     alias_method :orig_popen, :popen
   end
 
-  def self.popen(command)
+  def self.popen(command, mode = 'r')
     if command.end_with? 'phpize -v'
       StringIO.new <<PHPIZE
 Configuring for:
@@ -20,7 +20,7 @@ Zend Module Api No:      20090626
 Zend Extension Api No:   220090626
 PHPIZE
     else
-      self.orig_popen command
+      self.orig_popen command, mode
     end
   end
 
