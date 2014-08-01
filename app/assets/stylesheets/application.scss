@@ -544,14 +544,16 @@ strong.version {
   color:      $sand;
   display:    block;
   margin-top: 3px;
+  min-width:  6em;
+  padding-right: 0.5em;
   text-align: center;
-  width:      6em;
 
   &:before {
-    float: left;
+    float:       left;
     font-family: FontAwesome;
-    margin-left: 2px;
-    text-align: left;
+    margin:      0 0.5em 0 0.2em;
+    text-align:  center;
+    text-shadow: #333300 1px 2px 0;
   }
 }
 
@@ -598,7 +600,8 @@ em {
 
 .spec-head:before {
   color:   #d38400;
-  content: $fa-var-exclamation-circle;
+  content: $fa-var-bolt;
+  width:   21px;
 }
 
 ul#letters {
