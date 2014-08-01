@@ -10,9 +10,15 @@
     <h2>Current versions:
   <% end %>
   <div class="versions">
-    <strong class="version spec-stable"><%= @formula.stable_version || 'N/A' %></strong>
-    <strong class="version spec-devel"><%= @formula.devel_version || 'N/A' %></strong>
-    <strong class="version spec-head"><%= @formula.head_version || 'N/A' %></strong>
+    <% unless @formula.stable_version.nil? %>
+      <strong class="version spec-stable"><%= @formula.stable_version %></strong>
+    <% end %>
+    <% unless @formula.devel_version.nil? %>
+     <strong class="version spec-devel"><%= @formula.devel_version %></strong>
+    <% end %>
+    <% unless @formula.head_version.nil? %>
+      <strong class="version spec-head"><%= @formula.head_version %></strong>
+    <% end %>
   </div></h2>
   <% unless @formula.homepage.nil? %>
     <h2>Homepage: <em><%= link_to @formula.homepage, @formula.homepage %></em></h2>

@@ -538,8 +538,6 @@ div.recently-added, div.recently-updated {
 }
 
 strong.version {
-  @include border-radius(4px);
-
   background: $darkGray;
   border:     1px solid $sand;
   clear:      left;
@@ -569,16 +567,12 @@ div#basic div.versions {
     margin-top: -1px;
   }
 
-  .spec-devel {
-    @include border-radius(0)
+  strong.version:first-child {
+    @include border-top-radius(4px)
   }
 
-  .spec-head {
-    @include border-top-radius(0)
-  }
-
-  .spec-stable {
-    @include border-bottom-radius(0)
+  strong.version:last-child {
+    @include border-bottom-radius(4px)
   }
 }
 
