@@ -22,11 +22,17 @@ else
   end
 end
 
-def airbrake_rescued(&action)
-  begin
+if defined? Airbrake
+  def airbrake_rescued(&action)
+    begin
+      action.call
+    rescue
+      Airbrake.notify $!
+    end
+  end
+else
+  def airbrake_rescued(&action)
     action.call
-  rescue
-    Airbrake.notify $!
   end
 end
 
