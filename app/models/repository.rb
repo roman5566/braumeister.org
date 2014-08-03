@@ -119,7 +119,7 @@ class Repository
       formulae = files.map do |path|
         next unless path =~ formula_regex
         name = File.basename $1, '.rb'
-        $1 if name != '__template' && self.formulae.where(name: name).empty?
+        $1 if name != '__template' && !self.formulae.where(name: name).exists?
       end.compact
       formulae.compact!
 
@@ -225,9 +225,9 @@ class Repository
 
   def regenerate!
     FileUtils.rm_rf path
-    Author.where(repository_id: id).delete
-    Formula.where(repository_id: id).delete
-    Revision.where(repository_id: id).delete
+    Author.delete_all repository_id: id
+    Formula.delete_all repository_id: id
+    Revision.delete_all repository_id: id
 
     Formula.each do |formula|
       formula.update_attribute :dep_ids, formula.dep_ids.reject! { |i| i.starts_with? "#{id}/" }
