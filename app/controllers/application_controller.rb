@@ -24,10 +24,7 @@ class ApplicationController < ActionController::Base
             limit 5
 
     all_repos = Repository.order_by [:name, :asc]
-    @alt_repos = {}
-    (all_repos - [ @repository ]).each do |repo|
-      @alt_repos[repo] = repo.formulae.order_by(%i{name asc}).first.name[0]
-    end
+    @alt_repos = all_repos - [ @repository ]
 
     fresh_when etag: all_repos.max_by(&:updated_at).sha, public: true
   end

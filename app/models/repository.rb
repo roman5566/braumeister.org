@@ -53,6 +53,10 @@ class Repository
     git("ls-files | grep -E '(^|/)#{name}.rb'").lines.first.strip rescue nil
   end
 
+  def first_letter
+    self.formulae.order_by(%i{name asc}).first.name[0]
+  end
+
   def generate_formula_history(formula)
     Rails.logger.info "Regenerating history for formula #{formula.name}..."
 
