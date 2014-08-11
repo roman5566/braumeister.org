@@ -40,9 +40,13 @@ namespace :braumeister do
 
   Rails.logger = Logger.new STDOUT
 
-  task :select_repos, [:repo] => :environment do |t, args|
+  task :select_repos, [:repo] => :environment do |_, args|
     Mongoid.unit_of_work disable: :all do
-      @repos = args[:repo].nil? ? Repository.all : Repository.where(name: args[:repo])
+      @repos = if args[:repo].nil?
+        ([Repository.main] + Repository.all).uniq
+      else
+        Repository.where(name: args[:repo])
+      end
     end
   end
 
