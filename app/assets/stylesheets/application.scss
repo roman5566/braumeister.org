@@ -558,6 +558,8 @@ strong.version {
 }
 
 div.formula strong.version {
+  @include border-radius(4px);
+
   display: inline-block;
 }
 
