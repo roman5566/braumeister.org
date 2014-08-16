@@ -288,8 +288,7 @@ class Repository
     commits = git(log_cmd).split /\n\n/
     commit_progress = 0
     commit_count = commits.size
-    while !commits.empty?
-      commit_batch = commits.pop 100
+    commits.each_slice(100) do |commit_batch|
       commit_batch.each do |commit|
         commit = commit.lines.to_a
         info, formulae = commit.shift.strip.split("\x00"), commit
