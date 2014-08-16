@@ -43,6 +43,8 @@ a {
 }
 
 div#alternatives {
+  border-top: 1px solid #a15f11;
+
   h2 {
     font-family: 'Neuton', serif;
     font-size:   1.5em;
@@ -383,7 +385,6 @@ div#header div#social {
 }
 
 div#timestamps {
-  border-bottom:  1px solid #a15f11;
   color:          $sand;
   font-family:    'Helvetica', sans-serif;
   font-size:      9pt;
