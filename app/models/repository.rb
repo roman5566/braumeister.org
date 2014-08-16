@@ -330,12 +330,10 @@ class Repository
   def formulae_info(formulae, backward_compat = false)
     base_repo = full? ? self : Repository.main
 
-    pipe_read, pipe_write = IO.pipe
+    tmp_file = Tempfile.new 'braumeister-import'
 
     pid = fork do
       begin
-        pipe_read.close
-
         require 'sandbox_backtick'
         require 'sandbox_io_popen'
 
@@ -392,21 +390,15 @@ class Repository
           end
         end
 
-        Marshal.dump formulae_info, pipe_write
+        File.binwrite tmp_file, Marshal.dump(formulae_info)
       rescue
-        Marshal.dump $!, pipe_write
+        File.binwrite tmp_file, Marshal.dump($!)
       end
-
-      pipe_write.flush
-      pipe_write.close
-
-      exit!
     end
 
-    pipe_write.close
-    formulae_info = Marshal.load pipe_read
     Process.wait pid
-    pipe_read.close
+    formulae_info = Marshal.load File.binread(tmp_file)
+    tmp_file.unlink
     if formulae_info.is_a? StandardError
       raise formulae_info, formulae_info.message, formulae_info.backtrace
     end
