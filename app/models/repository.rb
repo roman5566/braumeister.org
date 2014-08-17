@@ -218,9 +218,9 @@ class Repository
       formula.save!
     end
 
-    generate_history last_sha
-
     Rails.logger.info "#{added} formulae added, #{modified} formulae modified, #{removed} formulae removed."
+
+    last_sha
   end
 
   def regenerate!
@@ -241,6 +241,7 @@ class Repository
 
     refresh
     recover_deleted_formulae
+    generate_history
   end
 
   def reset_head(sha = self.sha)

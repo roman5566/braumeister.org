@@ -61,7 +61,10 @@ namespace :braumeister do
   desc 'Pulls the latest changes from one or all repositories'
   task_with_tracing :update, [:repo] => :select_repos do
     @repos.each do |repo|
-      airbrake_rescued { repo.refresh }
+      airbrake_rescued do
+        last_sha = repo.refresh
+        repo.generate_history last_sha
+      end
     end
   end
 
