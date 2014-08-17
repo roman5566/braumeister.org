@@ -76,9 +76,8 @@ class FormulaeController < ApplicationController
     @title = @formula.name.dup
     @title << " – #{@repository.name}" unless @repository.main?
     @revisions = @formula.revisions.includes(:author).order_by %i{date desc}
-    @current_revision = @revisions.shift
 
-    fresh_when etag: @current_revision.sha, public: true
+    fresh_when etag: @revisions.first.sha, public: true
   end
 
   private
