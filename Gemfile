@@ -11,7 +11,7 @@ gem 'text', '~> 1.2.0'
 gem 'unicorn', '~> 4.8.1', platforms: :ruby
 
 group :assets do
-  gem 'compass-rails', '~> 1.1.0'
+  gem 'compass-rails', '~> 2.0.0'
   gem 'font-awesome-sass', '~> 4.1.0'
   gem 'sass-rails', '~> 4.0.3'
   gem 'uglifier', '~> 2.5.0'
