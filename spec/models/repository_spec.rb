@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 require 'spec_helper'
 
@@ -131,6 +131,7 @@ describe Repository do
       repo.expects(:update_status).returns [[], [], 'deadbeef']
       Rails.logger.expects(:info).with 'No formulae changed.'
       repo.expects(:generate_history).never
+      repo.stubs :save!
 
       repo.refresh
     end
@@ -146,12 +147,7 @@ describe Repository do
         1234
       end
 
-      repo.expects :exit!
       Process.expects(:wait).with 1234
-
-      io = StringIO.new
-      io.expects(:close).times(4).with { io.rewind }
-      IO.expects(:pipe).returns [io, io]
 
       repo.expects(:require).with 'sandbox_backtick'
       repo.expects(:require).with 'sandbox_io_popen'
@@ -159,6 +155,7 @@ describe Repository do
       repo.expects(:require).with 'Library/Homebrew/global'
       repo.expects(:require).with 'Library/Homebrew/formula'
       repo.expects(:require).with 'sandbox_macos'
+      repo.expects(:require).with 'sandbox_utils'
     end
 
     it 'sets some global information on the repo path' do
