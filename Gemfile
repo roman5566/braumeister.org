@@ -7,7 +7,7 @@ gem 'kaminari', '~> 0.16.0'
 gem 'mongoid', '~> 4.0.0'
 gem 'newrelic_rpm', '~> 3.9.0'
 gem 'rails', '4.1.5'
-gem 'text', '~> 1.2.0'
+gem 'text', '~> 1.3.0'
 gem 'unicorn', '~> 4.8.1', platforms: :ruby
 
 group :assets do
