@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2012-2014, Sebastian Staudt
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe Repository do
 
@@ -14,29 +14,29 @@ describe Repository do
       repo = mock
       Repository.expects(:find).with(Repository::MAIN).returns repo
 
-      Repository.main.should eq(repo)
+      expect(Repository.main).to eq(repo)
     end
   end
 
   describe '#main?' do
     it "returns true for #{Repository::MAIN}" do
-      repo.main?.should be_true
+      expect(repo.main?).to be_truthy
     end
 
     it 'returns false for other repositories' do
-      Repository.new(name: 'adamv/homebrew-alt').main?.should be_false
+      expect(Repository.new(name: 'adamv/homebrew-alt').main?).to be_falsey
     end
   end
 
   describe '#path' do
     it 'returns the filesystem path of the Git repository' do
-      repo.path.should eq("#{Braumeister::Application.tmp_path}/repos/#{Repository::MAIN}")
+      expect(repo.path).to eq("#{Braumeister::Application.tmp_path}/repos/#{Repository::MAIN}")
     end
   end
 
   describe '#url' do
     it 'returns the Git URL of the GitHub repository' do
-      repo.url.should eq("git://github.com/#{Repository::MAIN}.git")
+      expect(repo.url).to eq("git://github.com/#{Repository::MAIN}.git")
     end
   end
 
@@ -50,14 +50,14 @@ describe Repository do
         repo.expects(:`).with(command).returns 'log output'
         `test 0 -eq 0`
 
-        repo.git('log').should eq('log output')
+        expect(repo.git('log')).to eq('log output')
       end
 
       it 'with errors' do
         repo.expects(:`).with(command).returns ''
         `test 0 -eq 1`
 
-        -> { repo.git('log') }.should raise_error(RuntimeError, "Execution of `#{command}` failed.")
+        expect(-> { repo.git('log') }).to raise_error(RuntimeError, "Execution of `#{command}` failed.")
       end
 
     end
@@ -120,9 +120,9 @@ describe Repository do
 
       repo.generate_history!
 
-      repo.revisions.should be_empty
-      repo.authors.should be_empty
-      repo.formulae.each { |formula| formula.revisions.should be_empty }
+      expect(repo.revisions).to be_empty
+      expect(repo.authors).to be_empty
+      repo.formulae.each { |formula| expect(formula.revisions).to be_empty }
     end
   end
 
@@ -166,7 +166,7 @@ describe Repository do
 
       repo.send :formulae_info, []
 
-      $homebrew_path.should eq('path')
+      expect($homebrew_path).to eq('path')
     end
 
     it 'uses a forked process to load formula information' do
@@ -185,7 +185,7 @@ describe Repository do
       Formulary::StandardLoader.expects(:new).with('memcached').returns memcached_loader
 
       formulae_info = repo.send :formulae_info, %w{git memcached}
-      formulae_info.should eq({
+      expect(formulae_info).to eq({
         'git' => { deps: [], homepage: 'http://git-scm.com', keg_only: false, stable_version: '1.7.9', devel_version: nil, head_version:'HEAD' },
         'memcached' => { deps: %w(libevent), homepage: 'http://memcached.org/', keg_only: false, stable_version: '1.4.11', devel_version: '2.0.0.dev', head_version: nil }
       })
@@ -194,7 +194,7 @@ describe Repository do
     it 'reraises errors caused by the subprocess' do
       Formula.expects(:class_s).with('git').raises StandardError.new('subprocess failed')
 
-      ->() { repo.send :formulae_info, %w{git} }.should raise_error(StandardError, 'subprocess failed')
+      expect(-> { repo.send :formulae_info, %w{git} }).to raise_error(StandardError, 'subprocess failed')
     end
 
   end
@@ -202,11 +202,11 @@ describe Repository do
   describe '#formula_regex' do
 
     it 'returns a specific regex for full repos' do
-      Repository.new(full: true).send(:formula_regex).should eq(/^(?:Library\/)?Formula\/(.+?)\.rb$/)
+      expect(Repository.new(full: true).send(:formula_regex)).to eq(/^(?:Library\/)?Formula\/(.+?)\.rb$/)
     end
 
     it 'returns a generic regex for other repos' do
-      Repository.new.send(:formula_regex).should eq(/^(.+?\.rb)$/)
+      expect(Repository.new.send(:formula_regex)).to eq(/^(.+?\.rb)$/)
     end
 
   end
@@ -227,9 +227,9 @@ describe Repository do
 
       formulae, aliases, last_sha = repo.update_status
 
-      formulae.should eq([%w{A Library/Formula/bazaar.rb}, %w{A Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
-      aliases.should eq([%w{A Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
-      last_sha.should be_nil
+      expect(formulae).to eq([%w{A Library/Formula/bazaar.rb}, %w{A Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
+      expect(aliases).to eq([%w{A Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
+      expect(last_sha).to be_nil
     end
 
     it 'can get the current status of a new tap repository' do
@@ -239,9 +239,9 @@ describe Repository do
 
       formulae, aliases, last_sha = repo.update_status
 
-      formulae.should eq([%w{A bazaar.rb}, %w{A git.rb}, %w{A mercurial.rb}])
-      aliases.should eq([])
-      last_sha.should be_nil
+      expect(formulae).to eq([%w{A bazaar.rb}, %w{A git.rb}, %w{A mercurial.rb}])
+      expect(aliases).to eq([])
+      expect(last_sha).to be_nil
     end
 
     it 'can update the current status of a repository' do
@@ -252,14 +252,14 @@ describe Repository do
 
       formulae, aliases, last_sha = repo.update_status
 
-      formulae.should eq([%w{D Library/Formula/bazaar.rb}, %w{M Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
-      aliases.should eq([%w{D Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
-      last_sha.should eq('01234567')
+      expect(formulae).to eq([%w{D Library/Formula/bazaar.rb}, %w{M Library/Formula/git.rb}, %w{A Library/Formula/mercurial.rb}])
+      expect(aliases).to eq([%w{D Library/Aliases/bzr}, %w{A Library/Aliases/hg}])
+      expect(last_sha).to eq('01234567')
     end
 
     after do
-      repo.date.should eq(Time.at 1325844635)
-      repo.sha.should eq('deadbeef')
+      expect(repo.date).to eq(Time.at 1325844635)
+      expect(repo.sha).to eq('deadbeef')
     end
 
   end

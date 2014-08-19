@@ -1,9 +1,9 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe FormulaeController do
 
@@ -15,7 +15,7 @@ describe FormulaeController do
 
       controller.send :select_repository
 
-      controller.instance_variable_get(:@repository).should eq(repo)
+      expect(controller.instance_variable_get(:@repository)).to eq(repo)
     end
 
     it 'redirects to the short url for Repository::MAIN' do
@@ -33,14 +33,12 @@ describe FormulaeController do
 
       controller.send :select_repository
 
-      controller.instance_variable_get(:@repository).should eq(repo)
+      expect(controller.instance_variable_get(:@repository)).to eq(repo)
     end
   end
 
   describe '#show' do
     context 'when formula is not found' do
-      subject { get :show, repository_id: 'adamv/homebrew-alt', id: 'git' }
-
       before do
         repo = mock
         formulae = mock
@@ -50,11 +48,12 @@ describe FormulaeController do
         formulae.expects(:all_in).returns []
 
         @controller.stubs :index
+        bypass_rescue
       end
 
-      it do
-        should render_template('application/index')
-        flash.now[:error].should eq('The page you requested does not exist.')
+      it 'should raise an error' do
+        expect(-> { get :show, repository_id: 'adamv/homebrew-alt', id: 'git' }).
+          to raise_error(Mongoid::Errors::DocumentNotFound)
       end
     end
   end

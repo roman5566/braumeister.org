@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2012-2014, Sebastian Staudt
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe Formula do
 
@@ -19,7 +19,7 @@ describe Formula do
 
       formula.generate_history!
 
-      formula.revisions.should eq []
+      expect(formula.revisions).to be_empty
     end
   end
 
@@ -27,7 +27,7 @@ describe Formula do
     it 'should update the formula’s id' do
       formula.send :set_id
 
-      formula.id.should eq "#{Repository::MAIN}/git"
+      expect(formula.id).to eq "#{Repository::MAIN}/git"
     end
   end
 
@@ -43,11 +43,11 @@ describe Formula do
 
       formula.update_metadata formula_info
 
-      formula.homepage.should eq 'http://example.com'
-      formula.keg_only.should be true
-      formula.stable_version.should eq '1.0.0'
-      formula.devel_version.should eq '1.1.0.beta'
-      formula.head_version.should eq 'HEAD'
+      expect(formula.homepage).to eq 'http://example.com'
+      expect(formula.keg_only).to be_truthy
+      expect(formula.stable_version).to eq '1.0.0'
+      expect(formula.devel_version).to eq '1.1.0.beta'
+      expect(formula.head_version).to eq 'HEAD'
     end
   end
 
@@ -57,20 +57,20 @@ describe Formula do
       formula.devel_version = '1.1.0.beta'
       formula.head_version = 'HEAD'
 
-      formula.version.should eq '1.0.0'
+      expect(formula.version).to eq '1.0.0'
     end
 
     it 'should return the devel version if it is available and no stable version exists' do
       formula.devel_version = '1.1.0.beta'
       formula.head_version = 'HEAD'
 
-      formula.version.should eq '1.1.0.beta'
+      expect(formula.version).to eq '1.1.0.beta'
     end
 
     it 'should return the head version if no other version exists' do
       formula.head_version = 'HEAD'
 
-      formula.version.should eq 'HEAD'
+      expect(formula.version).to eq 'HEAD'
     end
   end
 
@@ -78,13 +78,13 @@ describe Formula do
 
     describe '#path' do
       it 'returns the relative path' do
-        formula.path.should eq('Library/Formula/git.rb')
+        expect(formula.path).to eq('Library/Formula/git.rb')
       end
     end
 
     describe '#raw_url' do
       it 'returns the GitHub URL of the raw formula file' do
-        formula.raw_url.should eq("https://raw.github.com/#{Repository::MAIN}/HEAD/Library/Formula/git.rb")
+        expect(formula.raw_url).to eq("https://raw.github.com/#{Repository::MAIN}/HEAD/Library/Formula/git.rb")
       end
     end
 
@@ -99,13 +99,13 @@ describe Formula do
 
     describe '#path' do
       it 'returns the relative path' do
-        formula.path.should eq('duplicates/php.rb')
+        expect(formula.path).to eq('duplicates/php.rb')
       end
     end
 
     describe '#raw_url' do
       it 'returns the GitHub URL of the raw formula file' do
-        formula.raw_url.should eq('https://raw.github.com/adamv/homebrew-alt/HEAD/duplicates/php.rb')
+        expect(formula.raw_url).to eq('https://raw.github.com/adamv/homebrew-alt/HEAD/duplicates/php.rb')
       end
     end
 
