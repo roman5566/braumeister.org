@@ -399,7 +399,7 @@ class Repository
               head_version: (formula.head.version.to_s rescue nil)
             }
           rescue FormulaUnavailableError, NoMethodError, RuntimeError,
-                 SyntaxError
+                 SyntaxError, TypeError
             error_msg = "Formula '#{name}' could not be imported because of an error:\n" <<
                     "    #{$!.class}: #{$!.message}"
             Rails.logger.warn error_msg
