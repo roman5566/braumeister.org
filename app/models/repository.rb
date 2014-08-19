@@ -236,7 +236,7 @@ class Repository
     formula_path = path
     formula_path = File.join formula_path, 'Library', 'Formula' if full?
     formula_path = File.join formula_path, '**', '*.rb'
-    formulae = Dir.glob(formula_path).map { |f| File.basename f, '.rb' }
+    formulae = Dir.glob(formula_path).select { |f| f =~ formula_regex }
 
     formulae_info(formulae).each do |name, formula_info|
       formula = self.formulae.find_or_initialize_by name: name
