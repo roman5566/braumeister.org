@@ -11,6 +11,8 @@ branches:
     - production
     - staging
 
+cache: bundler
+
 rvm:
  - 2.1.1
  - jruby-head
