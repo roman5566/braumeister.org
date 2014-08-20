@@ -9,11 +9,12 @@ describe Repository do
 
   let(:repo) { Repository.new name: Repository::MAIN, full: true }
 
+  before do
+    Repository.stubs(:find).with(Repository::MAIN).returns repo
+  end
+
   describe '.main' do
     it "returns the repository object for #{Repository::MAIN}" do
-      repo = mock
-      Repository.expects(:find).with(Repository::MAIN).returns repo
-
       expect(Repository.main).to eq(repo)
     end
   end
