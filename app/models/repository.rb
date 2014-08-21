@@ -105,7 +105,8 @@ class Repository
 
       formulae = files.map do |path|
         next unless path =~ formula_regex
-        $1 if $1 != '__template' && self.formulae.where(name: $1).empty?
+        name = File.basename $1, '.rb'
+        $1 if name != '__template' && self.formulae.where(name: name).empty?
       end
       formulae.compact!
 
@@ -120,7 +121,8 @@ class Repository
 
         formulae_info = formulae_info formulae, true
         formulae.each do |name|
-          formula = self.formulae.find_or_initialize_by name: name
+          formula_name = File.basename name, '.rb'
+          formula = self.formulae.find_or_initialize_by name: formula_name
           formula.deps = []
           formula_info = formulae_info.delete formula.name
           next if formula_info.nil?
