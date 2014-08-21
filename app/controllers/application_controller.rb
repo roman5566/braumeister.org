@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     all_repos = Repository.order_by [:name, :asc]
     @alt_repos = all_repos - [ @repository ]
 
-    fresh_when etag: all_repos.max_by(&:updated_at).sha, public: true
+    fresh_when etag: Repository.main.sha, public: true
   end
 
   def not_found
