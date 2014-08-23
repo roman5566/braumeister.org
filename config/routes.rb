@@ -48,6 +48,6 @@ Braumeister::Application.routes.draw do
 
   root to: 'application#index'
 
-  get '*url', to: 'application#not_found'
+  get '*url', to: 'application#not_found', format: false
 
 end
