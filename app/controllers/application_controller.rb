@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
 
+  rescue_from StandardError, with: :error_page
+
   def index
     @repository = Repository.main
 
@@ -27,6 +29,17 @@ class ApplicationController < ActionController::Base
     @alt_repos = all_repos - [ @repository ]
 
     fresh_when etag: Repository.main.sha, public: true
+  end
+
+  def error_page(error)
+    Airbrake.notify error if defined? Airbrake
+
+    respond_to do |format|
+      render 'application/500', status: :internal_server_error
+    end
+    
+    headers.delete 'ETag'
+    expires_in 5.minutes
   end
 
   def not_found
