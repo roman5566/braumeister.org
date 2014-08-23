@@ -35,9 +35,9 @@ class ApplicationController < ActionController::Base
     Airbrake.notify error if defined? Airbrake
 
     respond_to do |format|
-      render 'application/500', status: :internal_server_error
+      format.html { render 'application/500', status: :internal_server_error }
     end
-    
+
     headers.delete 'ETag'
     expires_in 5.minutes
   end
