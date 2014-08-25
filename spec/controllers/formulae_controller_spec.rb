@@ -35,6 +35,10 @@ describe FormulaeController do
 
       expect(controller.instance_variable_get(:@repository)).to eq(repo)
     end
+
+    it 'redirects to the correct repository if capitalization is incorrect'
+
+    it 'raises Mongoid::Errors::DocumentNotFound if no repository is found'
   end
 
   describe '#show' do
