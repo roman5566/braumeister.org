@@ -108,4 +108,10 @@ describe 'routing' do
   it 'routes unknown URLs to application#not_found' do
     expect(get: '/unknown').to route_to('application#not_found', url: 'unknown')
   end
+
+  it 'disallows DELETE requests'
+
+  it 'disallows POST requests'
+
+  it 'disallows PUT requests'
 end

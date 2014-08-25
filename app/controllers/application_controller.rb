@@ -40,6 +40,12 @@ class ApplicationController < ActionController::Base
     expires_in 5.minutes
   end
 
+  def forbidden
+    respond_to do |format|
+      format.json { render nothing: true, status: :forbidden }
+    end
+  end
+
   def not_found
     flash.now[:error] = 'The page you requested does not exist.'
     index

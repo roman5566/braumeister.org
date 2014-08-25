@@ -1,7 +1,7 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 Braumeister::Application.routes.draw do
 
@@ -49,5 +49,9 @@ Braumeister::Application.routes.draw do
   root to: 'application#index'
 
   get '*url', to: 'application#not_found', format: false
+
+  delete '*url', to: 'application#forbidden', format: false
+  post '*url', to: 'application#forbidden', format: false
+  put '*url', to: 'application#forbidden', format: false
 
 end
