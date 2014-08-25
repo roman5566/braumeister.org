@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
 
-  rescue_from StandardError, with: :error_page
-
   def index
     @repository = Repository.main
 
@@ -31,8 +29,8 @@ class ApplicationController < ActionController::Base
     fresh_when etag: Repository.main.sha, public: true
   end
 
-  def error_page(error)
-    Airbrake.notify error if defined? Airbrake
+  def error_page
+    Airbrake.notify $! if defined? Airbrake
 
     respond_to do |format|
       format.html { render 'application/500', status: :internal_server_error }

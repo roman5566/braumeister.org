@@ -19,6 +19,8 @@ module Braumeister
 
     config.encoding = "utf-8"
 
+    config.exceptions_app = ->(env) { ApplicationController.action(:error_page).call(env) }
+
     config.i18n.enforce_available_locales = false
 
     def self.tmp_path
