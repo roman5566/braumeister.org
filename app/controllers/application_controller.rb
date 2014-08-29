@@ -8,23 +8,7 @@ class ApplicationController < ActionController::Base
   rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found
 
   def index
-    @repository = Repository.main
-
-    @added = @repository.formulae.with_size(revision_ids: 1).
-            order_by(%i{date desc}).
-            limit 5
-
-    @updated = @repository.formulae.where(removed: false).
-            not.with_size(revision_ids: 1).
-            order_by(%i{date desc}).
-            limit 5
-
-    @removed = @repository.formulae.where(removed: true).
-            order_by(%i{date desc}).
-            limit 5
-
-    all_repos = Repository.order_by [:name, :asc]
-    @alt_repos = all_repos - [ @repository ]
+    main_page
 
     respond_to do |format|
       format.html { render 'application/index' }
@@ -54,7 +38,7 @@ class ApplicationController < ActionController::Base
 
   def not_found
     flash.now[:error] = 'The page you requested does not exist.'
-    index
+    main_page
 
     respond_to do |format|
       format.html { render 'application/index', status: :not_found }
@@ -73,6 +57,28 @@ class ApplicationController < ActionController::Base
     end
 
     fresh_when etag: @repository.sha, public: true
+  end
+
+  private
+
+  def main_page
+    @repository = Repository.main
+
+    @added = @repository.formulae.with_size(revision_ids: 1).
+            order_by(%i{date desc}).
+            limit 5
+
+    @updated = @repository.formulae.where(removed: false).
+            not.with_size(revision_ids: 1).
+            order_by(%i{date desc}).
+            limit 5
+
+    @removed = @repository.formulae.where(removed: true).
+            order_by(%i{date desc}).
+            limit 5
+
+    all_repos = Repository.order_by [:name, :asc]
+    @alt_repos = all_repos - [ @repository ]
   end
 
 end
