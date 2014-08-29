@@ -10,41 +10,49 @@ Braumeister::Application.routes.draw do
     resources :formulae, only: :browse, path: 'browse' do
       get ':letter(/:page)', action: :browse, on: :collection,
           as: :letter,
-          constraints: { letter: /[A-Za-z]/, page: /\d+/ }
+          constraints: { letter: /[A-Za-z]/, page: /\d+/, format: 'html' }
     end
 
     resources :formulae, only: :browse, path: 'search' do
-      get '', action: :browse, on: :collection, as: :search_root
+      get '', action: :browse, on: :collection, as: :search_root,
+          constraints: { format: 'html' }
       get ':search(/:page)', action: :browse, on: :collection,
           as: :search,
-          constraints: { page: /\d+/, search: /[^\/]+/ }
+          constraints: { page: /\d+/, search: /[^\/]+/, format: 'html' }
     end
 
     resources :formula, controller: :formulae, only: :show,
-              constraints: { id: /.*/ }
+              constraints: { id: /.*/, format: 'html' }
 
-    get '/feed' => 'formulae#feed', as: :feed
+    scope format: true, :constraints => { :format => 'atom' } do
+      get '/feed' => 'formulae#feed', as: :feed
+    end
   end
 
   resources :formulae, only: :browse, path: 'browse' do
     get ':letter(/:page)', action: :browse, on: :collection,
         as: :letter,
-        constraints: { letter: /[A-Za-z]/, page: /\d+/ }
+        constraints: { letter: /[A-Za-z]/, page: /\d+/, format: 'html' }
   end
 
   resources :formulae, only: :browse, path: 'search' do
-    get '', action: :browse, on: :collection, as: :search_root
+    get '', action: :browse, on: :collection, as: :search_root,
+        constraints: { format: 'html' }
     get ':search(/:page)', action: :browse, on: :collection,
         as: :search,
-        constraints: { page: /\d+/, search: /[^\/]+/ }
+        constraints: { page: /\d+/, search: /[^\/]+/, format: 'html' }
   end
 
   resources :formula, controller: :formulae, only: :show,
-            constraints: { id: /.*/ }
+            constraints: { id: /.*/, format: 'html' }
 
-  get '/feed' => 'formulae#feed', as: :feed
+  scope format: true, :constraints => { :format => 'atom' } do
+    get '/feed' => 'formulae#feed', as: :feed
+  end
 
-  get '/sitemap' => 'application#sitemap', as: :sitemap
+  scope format: true, :constraints => { :format => 'xml' } do
+    get '/sitemap' => 'application#sitemap', as: :sitemap
+  end
 
   root to: 'application#index'
 

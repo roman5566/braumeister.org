@@ -26,6 +26,11 @@ class ApplicationController < ActionController::Base
     all_repos = Repository.order_by [:name, :asc]
     @alt_repos = all_repos - [ @repository ]
 
+    respond_to do |format|
+      format.html { render 'application/index' }
+      format.any { render nothing: true, status: :not_found }
+    end
+
     fresh_when etag: Repository.main.sha, public: true
   end
 
@@ -34,6 +39,7 @@ class ApplicationController < ActionController::Base
 
     respond_to do |format|
       format.html { render 'application/500', status: :internal_server_error }
+      format.any { render nothing: true, status: :internal_server_error }
     end
 
     headers.delete 'ETag'
@@ -42,7 +48,7 @@ class ApplicationController < ActionController::Base
 
   def forbidden
     respond_to do |format|
-      format.json { render nothing: true, status: :forbidden }
+      format.any { render nothing: true, status: :forbidden }
     end
   end
 
@@ -52,6 +58,7 @@ class ApplicationController < ActionController::Base
 
     respond_to do |format|
       format.html { render 'application/index', status: :not_found }
+      format.any { render nothing: true, status: :not_found }
     end
 
     headers.delete 'ETag'
