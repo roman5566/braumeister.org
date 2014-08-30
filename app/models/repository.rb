@@ -163,7 +163,7 @@ class Repository
       Rails.logger.info 'No formulae changed.'
       touch
       save!
-      return
+      return last_sha
     end
 
     formulae_info = formulae_info formulae.map { |type, fpath|
