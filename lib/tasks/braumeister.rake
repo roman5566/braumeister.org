@@ -3,6 +3,8 @@
 #
 # Copyright (c) 2012-2014, Sebastian Staudt
 
+require 'repository_import'
+
 if defined? ::NewRelic
   def task_with_tracing(*options)
     caller_method = options.first
@@ -42,9 +44,11 @@ namespace :braumeister do
 
   task :select_repos, [:repo] => :environment do |_, args|
     @repos = if args[:repo].nil?
-      ([Repository.main] + Repository.all).uniq
+      repos = ([Repository.main] + Repository.all).uniq
+      repos.each { |repo| repo.extend RepositoryImport }
     else
-      Repository.where(name: args[:repo])
+      repo = Repository.where(name: args[:repo])
+      repo.extend RepositoryImport
     end
   end
 
