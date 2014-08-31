@@ -210,8 +210,7 @@ module RepositoryImport
   end
 
   def main_repo
-    main_repo = Repository.main
-    main_repo.extend RepositoryImport
+    Repository.main.extend RepositoryImport
   end
 
   def path
