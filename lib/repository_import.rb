@@ -76,7 +76,7 @@ module RepositoryImport
   end
 
   def formulae_info(formulae, backward_compat = false)
-    base_repo = full? ? self : Repository.main
+    base_repo = full? ? self : main_repo
 
     tmp_file = Tempfile.new 'braumeister-import'
 
