@@ -77,8 +77,7 @@ class ApplicationController < ActionController::Base
             order_by(%i{date desc}).
             limit 5
 
-    all_repos = Repository.order_by [:name, :asc]
-    @alt_repos = all_repos - [ @repository ]
+    @alt_repos = Repository.ne(name: Repository::MAIN).order_by [:name, :asc]
   end
 
 end
