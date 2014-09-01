@@ -7,7 +7,11 @@ $(function() {
   $('time.timeago').timeago();
 
   $('#search-form').submit(function() {
-    var searchUrl = '/search/' + $('#search').val();
+    var searchTerm = $('#search').val();
+    if (!searchTerm) {
+      return false;
+    }
+    var searchUrl = '/search/' + searchTerm;
     var repositoryName = $('body').data('repository');
     if (typeof(repositoryName) !== 'undefined') {
       searchUrl = '/repos/' + repositoryName + searchUrl;

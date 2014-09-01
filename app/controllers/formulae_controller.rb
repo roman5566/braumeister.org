@@ -33,6 +33,8 @@ class FormulaeController < ApplicationController
   end
 
   def search
+    return not_found if params[:search].nil? || params[:search].empty?
+
     term = params[:search]
     @title = "Search for: #{term}"
     @title << " in #{@repository.name}" unless @repository.main?
