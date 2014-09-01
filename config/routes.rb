@@ -54,8 +54,11 @@ Braumeister::Application.routes.draw do
 
   get '*url', to: 'application#not_found', format: false
 
+  delete '/', to: 'application#forbidden', format: false
   delete '*url', to: 'application#forbidden', format: false
+  post '/', to: 'application#forbidden', format: false
   post '*url', to: 'application#forbidden', format: false
+  put '/', to: 'application#forbidden', format: false
   put '*url', to: 'application#forbidden', format: false
 
 end
