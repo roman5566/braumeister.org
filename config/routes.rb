@@ -16,7 +16,7 @@ Braumeister::Application.routes.draw do
     resources :formulae, only: :browse, path: 'search' do
       get '', action: :browse, on: :collection, as: :search_root,
           constraints: { format: 'html' }
-      get ':search(/:page)', action: :browse, on: :collection,
+      get ':search(/:page)', action: :search, on: :collection,
           as: :search,
           constraints: { page: /\d+/, search: /[^\/]+/, format: 'html' }
     end
@@ -38,7 +38,7 @@ Braumeister::Application.routes.draw do
   resources :formulae, only: :browse, path: 'search' do
     get '', action: :browse, on: :collection, as: :search_root,
         constraints: { format: 'html' }
-    get ':search(/:page)', action: :browse, on: :collection,
+    get ':search(/:page)', action: :search, on: :collection,
         as: :search,
         constraints: { page: /\d+/, search: /[^\/]+/, format: 'html' }
   end

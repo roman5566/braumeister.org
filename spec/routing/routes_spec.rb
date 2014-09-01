@@ -25,16 +25,16 @@ describe 'routing' do
     )
   end
 
-  it 'routes /search/:search to formulae#browse' do
+  it 'routes /search/:search to formulae#search' do
     expect(get: '/search/git').to route_to(
-      'formulae#browse',
+      'formulae#search',
       search: 'git'
     )
   end
 
-  it 'routes /search/:search/:page to formulae#browse' do
+  it 'routes /search/:search/:page to formulae#search' do
     expect(get: '/search/git/2').to route_to(
-      'formulae#browse',
+      'formulae#search',
       search: 'git',
       page: '2'
     )
@@ -68,17 +68,17 @@ describe 'routing' do
     )
   end
 
-  it 'routes /repos/adamv/homebrew-alt/search/:search to formulae#browse' do
+  it 'routes /repos/adamv/homebrew-alt/search/:search to formulae#search' do
     expect(get: '/repos/adamv/homebrew-alt/search/git').to route_to(
-      'formulae#browse',
+      'formulae#search',
       repository_id: 'adamv/homebrew-alt',
       search: 'git'
     )
   end
 
-  it 'routes /repos/adamv/homebrew-alt/search/:search/:page to formulae#browse' do
+  it 'routes /repos/adamv/homebrew-alt/search/:search/:page to formulae#search' do
     expect(get: '/repos/adamv/homebrew-alt/search/git/2').to route_to(
-      'formulae#browse',
+      'formulae#search',
       repository_id: 'adamv/homebrew-alt',
       search: 'git',
       page: '2'

@@ -1,50 +1,23 @@
 # This code is free software; you can redistribute it and/or modify it under
 # the terms of the new BSD License.
 #
-# Copyright (c) 2012-2013, Sebastian Staudt
+# Copyright (c) 2012-2014, Sebastian Staudt
 
 require 'text'
 
 class FormulaeController < ApplicationController
 
   before_filter :select_repository
+  before_filter :letters, only: [ :browse, :search ]
 
   def browse
-    if params[:search].nil? || params[:search].empty?
-      letter = params[:letter]
-      letter = 'a' if letter.nil? || letter.empty?
-      @title = "Browse formulae – #{letter.upcase}"
-      @title << " – #{@repository.name}" unless @repository.main?
+    letter = params[:letter]
+    @title = "Browse formulae – #{letter.upcase}"
+    @title << " – #{@repository.name}" unless @repository.main?
 
-      @formulae = @repository.formulae.letter(letter).where(removed: false).order_by([:name, :asc])
-    else
-      term = params[:search]
-      @title = "Search for: #{term}"
-      @title << " in #{@repository.name}" unless @repository.main?
-      @formulae = @repository.formulae.
-        where name: /#{Regexp.escape term}/i, removed: false
-
-      if @formulae.size == 1 && term == @formulae.first.name
-        if @repository.main?
-          redirect_to formula_path(@formulae.first)
-        else
-          redirect_to repository_formula_path(@repository.name, @formulae.first)
-        end
-        return
-      end
-
-      @formulae = @formulae.order_by([:name, :asc]).sort_by do |formula|
-        Text::Levenshtein.distance(formula.name, term) +
-        Text::Levenshtein.distance(formula.name[0..term.size - 1], term)
-      end
-      @formulae = Kaminari.paginate_array @formulae
-    end
-
-    @letters = ('A'..'Z').select do |letter|
-      @repository.formulae.letter(letter).where(removed: false).exists?
-    end
-
-    @formulae = @formulae.page(params[:page]).per 30
+    @formulae = @repository.formulae.letter(letter).
+            where(removed: false).order_by([:name, :asc]).
+            page(params[:page]).per 30
 
     fresh_when etag: @repository.sha, public: true
   end
@@ -54,6 +27,36 @@ class FormulaeController < ApplicationController
 
     respond_to do |format|
       format.atom
+    end
+
+    fresh_when etag: @repository.sha, public: true
+  end
+
+  def search
+    term = params[:search]
+    @title = "Search for: #{term}"
+    @title << " in #{@repository.name}" unless @repository.main?
+    @formulae = @repository.formulae.
+      where name: /#{Regexp.escape term}/i, removed: false
+
+    if @formulae.size == 1 && term == @formulae.first.name
+      if @repository.main?
+        redirect_to formula_path(@formulae.first)
+      else
+        redirect_to repository_formula_path(@repository.name, @formulae.first)
+      end
+      return
+    end
+
+    @formulae = @formulae.sort_by do |formula|
+      Text::Levenshtein.distance(formula.name, term) +
+      Text::Levenshtein.distance(formula.name[0..term.size - 1], term)
+    end
+    @formulae = Kaminari.paginate_array(@formulae).
+            page(params[:page]).per 30
+
+    respond_to do |format|
+      format.html { render 'formulae/browse' }
     end
 
     fresh_when etag: @repository.sha, public: true
@@ -81,6 +84,12 @@ class FormulaeController < ApplicationController
   end
 
   private
+
+  def letters
+    @letters = ('A'..'Z').select do |letter|
+      @repository.formulae.letter(letter).where(removed: false).exists?
+    end
+  end
 
   def select_repository
     main_repo_url = "/repos/#{Repository::MAIN}/"
