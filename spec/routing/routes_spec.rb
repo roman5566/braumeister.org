@@ -25,6 +25,10 @@ describe 'routing' do
     )
   end
 
+  it 'routes /search to formulae#search' do
+    expect(get: '/search').to route_to('formulae#search')
+  end
+
   it 'routes /search/:search to formulae#search' do
     expect(get: '/search/git').to route_to(
       'formulae#search',
@@ -64,6 +68,13 @@ describe 'routing' do
       'formulae#browse',
       letter: 'a',
       page: '2',
+      repository_id: 'adamv/homebrew-alt'
+    )
+  end
+
+  it 'routes /repos/adamv/homebrew-alt/search to formulae#search' do
+    expect(get: '/repos/adamv/homebrew-alt/search').to route_to(
+      'formulae#search',
       repository_id: 'adamv/homebrew-alt'
     )
   end
