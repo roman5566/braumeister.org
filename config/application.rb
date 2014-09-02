@@ -23,6 +23,8 @@ module Braumeister
 
     config.i18n.enforce_available_locales = false
 
+    config.middleware.use Mongoid::QueryCache::Middleware
+
     def self.tmp_path
       @@tmp_path ||= File.join Rails.root, 'tmp'
     end
