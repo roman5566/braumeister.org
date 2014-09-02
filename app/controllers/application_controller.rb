@@ -66,15 +66,18 @@ class ApplicationController < ActionController::Base
 
     @added = @repository.formulae.with_size(revision_ids: 1).
             order_by(%i{date desc}).
+            only(:_id, :devel_version, :head_version, :name, :repository_id, :stable_version).
             limit 5
 
     @updated = @repository.formulae.where(removed: false).
             not.with_size(revision_ids: 1).
             order_by(%i{date desc}).
+            only(:_id, :devel_version, :head_version, :name, :repository_id, :stable_version).
             limit 5
 
     @removed = @repository.formulae.where(removed: true).
             order_by(%i{date desc}).
+            only(:_id, :name, :repository_id).
             limit 5
 
     @alt_repos = Repository.ne(name: Repository::MAIN).order_by [:name, :asc]
