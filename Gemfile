@@ -27,7 +27,7 @@ group :development, :test do
 end
 
 group :production do
-  gem 'airbrake', '~> 4.0.0'
+  gem 'airbrake', '~> 4.1.0'
   gem 'rails_12factor', '~> 0.0.2'
 end
 
