@@ -123,7 +123,9 @@ describe RepositoryImport do
   describe '#formulae_info' do
 
     before do
+      class FormulaSpecificationError; end
       class FormulaUnavailableError; end
+      class FormulaValidationError; end
 
       def repo.fork
         yield

@@ -138,7 +138,8 @@ module RepositoryImport
                 current_formula_info[:head_version].nil?
                 current_formula_info[:stable_version] = formula.version.to_s
             end
-          rescue FormulaUnavailableError, NoMethodError, RuntimeError,
+          rescue FormulaSpecificationError, FormulaUnavailableError,
+                 FormulaValidationError, NoMethodError, RuntimeError,
                  SyntaxError, TypeError
             error_msg = "Formula '#{name}' could not be imported because of an error:\n" <<
                     "    #{$!.class}: #{$!.message}"
