@@ -13,7 +13,7 @@ describe FormulaeController do
       repo.expects(:name).returns 'Homebrew/homebrew-versions'
       criteria = mock
       Repository.expects(:where).with(name: /^Homebrew\/homebrew-versions$/i).returns criteria
-      criteria.expects(:only).with(:_id, :name, :sha).returns [ repo ]
+      criteria.expects(:only).with(:_id, :name, :sha, :updated_at).returns [ repo ]
       controller.expects(:params).returns({ repository_id: 'Homebrew/homebrew-versions' })
 
       controller.send :select_repository
@@ -35,7 +35,7 @@ describe FormulaeController do
       repo.expects(:name).returns Repository::MAIN
       criteria = mock
       Repository.expects(:where).with(name: /^#{Repository::MAIN}$/i).returns criteria
-      criteria.expects(:only).with(:_id, :name, :sha).returns [ repo ]
+      criteria.expects(:only).with(:_id, :name, :sha, :updated_at).returns [ repo ]
 
       controller.send :select_repository
 

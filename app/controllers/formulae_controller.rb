@@ -103,7 +103,7 @@ class FormulaeController < ApplicationController
     repository_id = params[:repository_id] || Repository::MAIN
 
     @repository = Repository.where(name: /^#{repository_id}$/i).
-            only(:_id, :name, :sha).first
+            only(:_id, :name, :sha, :updated_at).first
     raise Mongoid::Errors::DocumentNotFound if @repository.nil?
 
     if @repository.name != repository_id
