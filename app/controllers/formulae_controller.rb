@@ -100,13 +100,14 @@ class FormulaeController < ApplicationController
       return
     end
 
-    params[:repository_id] ||= Repository::MAIN
-    begin
-      @repository = Repository.find params[:repository_id]
-    rescue Mongoid::Errors::DocumentNotFound
-      repository = Repository.where(name: /^#{params[:repository_id]}$/i).first
-      raise if repository.nil?
-      redirect_to request.url.sub "/repos/#{params[:repository_id]}", "/repos/#{repository.name}"
+    repository_id = params[:repository_id] || Repository::MAIN
+
+    @repository = Repository.where(name: /^#{repository_id}$/i).
+            only(:_id, :name, :sha).first
+    raise Mongoid::Errors::DocumentNotFound if @repository.nil?
+
+    if @repository.name != repository_id
+      redirect_to request.url.sub "/repos/#{repository_id}", "/repos/#{@repository.name}"
     end
   end
 

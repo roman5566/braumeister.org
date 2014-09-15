@@ -62,7 +62,9 @@ class ApplicationController < ActionController::Base
   private
 
   def main_page
-    @repository = Repository.main
+    @alt_repos = Repository.only(:_id, :date, :name, :sha, :updated_at).order_by([:name, :asc]).to_a
+    @repository = @alt_repos.find { |repo| repo.name == Repository::MAIN }
+    @alt_repos -= [ @repository ]
 
     @added = @repository.formulae.with_size(revision_ids: 1).
             order_by(%i{date desc}).
@@ -79,8 +81,6 @@ class ApplicationController < ActionController::Base
             order_by(%i{date desc}).
             only(:_id, :name, :repository_id).
             limit 5
-
-    @alt_repos = Repository.ne(name: Repository::MAIN).order_by [:name, :asc]
   end
 
 end

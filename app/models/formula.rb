@@ -44,6 +44,10 @@ class Formula
     end
   end
 
+  def in_main?
+    self.repository_id == Repository::MAIN
+  end
+
   def path
     path = repository.full? ? File.join('Library', 'Formula') : self[:path]
     (path.nil? ? name : File.join(path, name)) + '.rb'

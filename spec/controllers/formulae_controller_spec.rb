@@ -10,8 +10,11 @@ describe FormulaeController do
   describe '#select_repository' do
     it 'sets the repository' do
       repo = mock
-      Repository.expects(:find).with('adamv/homebrew-alt').returns repo
-      controller.expects(:params).twice.returns({ repository_id: 'adamv/homebrew-alt' })
+      repo.expects(:name).returns 'Homebrew/homebrew-versions'
+      criteria = mock
+      Repository.expects(:where).with(name: /^Homebrew\/homebrew-versions$/i).returns criteria
+      criteria.expects(:only).with(:_id, :name, :sha).returns [ repo ]
+      controller.expects(:params).returns({ repository_id: 'Homebrew/homebrew-versions' })
 
       controller.send :select_repository
 
@@ -29,7 +32,10 @@ describe FormulaeController do
 
     it 'the repository defaults to Repository::MAIN' do
       repo = mock
-      Repository.expects(:find).with(Repository::MAIN).returns repo
+      repo.expects(:name).returns Repository::MAIN
+      criteria = mock
+      Repository.expects(:where).with(name: /^#{Repository::MAIN}$/i).returns criteria
+      criteria.expects(:only).with(:_id, :name, :sha).returns [ repo ]
 
       controller.send :select_repository
 
@@ -44,19 +50,19 @@ describe FormulaeController do
   describe '#show' do
     context 'when formula is not found' do
       before do
-        repo = mock
         formulae = mock
-        Repository.expects(:find).with('adamv/homebrew-alt').returns repo
-        repo.expects(:formulae).twice.returns formulae
         formulae.expects(:where).returns []
         formulae.expects(:all_in).returns []
+        repo = mock
+        repo.expects(:formulae).twice.returns formulae
 
-        @controller.stubs :index
+        controller.stubs :select_repository
+        controller.instance_variable_set :@repository, repo
         bypass_rescue
       end
 
       it 'should raise an error' do
-        expect(-> { get :show, repository_id: 'adamv/homebrew-alt', id: 'git' }).
+        expect(-> { get :show, repository_id: 'Homebrew/homebrew-versions', id: 'git' }).
           to raise_error(Mongoid::Errors::DocumentNotFound)
       end
     end
