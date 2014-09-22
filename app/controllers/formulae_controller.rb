@@ -104,7 +104,9 @@ class FormulaeController < ApplicationController
 
     @repository = Repository.where(name: /^#{repository_id}$/i).
             only(:_id, :name, :sha, :updated_at).first
-    raise Mongoid::Errors::DocumentNotFound if @repository.nil?
+    if @repository.nil?
+      raise Mongoid::Errors::DocumentNotFound.new Repository, [], repository_id
+    end
 
     if @repository.name != repository_id
       redirect_to request.url.sub "/repos/#{repository_id}", "/repos/#{@repository.name}"
