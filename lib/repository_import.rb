@@ -167,6 +167,8 @@ module RepositoryImport
   end
 
   def formula_regex
+    return Regexp.new(special_formula_regex) unless special_formula_regex.nil?
+
     full? ? /^(?:Library\/)?Formula\/(.+?)\.rb$/ : /^(.+?\.rb)$/
   end
 

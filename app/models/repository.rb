@@ -15,6 +15,7 @@ class Repository
   field :full, type: Boolean, default: false
   field :name, type: String
   field :sha, type: String
+  field :special_formula_regex, type: String
 
   has_and_belongs_to_many :authors, validate: false
   has_many :formulae, dependent: :destroy, validate: false

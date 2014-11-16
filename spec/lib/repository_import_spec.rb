@@ -8,7 +8,8 @@ require 'repository_import'
 describe RepositoryImport do
 
   let(:repo) do
-    repo = Repository.new name: Repository::MAIN, full: true
+    repo = Repository.new name: Repository::MAIN, full: true,
+                          special_formula_regex: nil
     repo.extend subject
   end
 
@@ -198,6 +199,11 @@ describe RepositoryImport do
 
     it 'returns a generic regex for other repos' do
       expect(repo.formula_regex).to eq(/^(.+?\.rb)$/)
+    end
+
+    it 'returns the special regex if one is defined' do
+      repo.special_formula_regex = '.*'
+      expect(repo.formula_regex).to eq(/.*/)
     end
 
   end
